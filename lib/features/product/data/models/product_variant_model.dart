@@ -1,5 +1,3 @@
-import 'package:ecommerce_app/features/product/logic/entities/product_variant_entity.dart';
-
 class ProductVariantModel {
   const ProductVariantModel({
     required this.id,

@@ -23,5 +23,25 @@
   "search": "Search",
   "@search": { "description": "Search label" },
   "back": "Back",
-  "@back": { "description": "Back navigation label" }
+  "@back": { "description": "Back navigation label" },
+
+  "login": "Login",
+  "loginTitle": "Welcome Back",
+  "loginSubtitle": "Login to your account to continue shopping",
+  "email": "Email",
+  "emailHint": "Enter your email",
+  "password": "Password",
+  "passwordHint": "Enter your password",
+  "forgotPassword": "Forgot Password?",
+  "dontHaveAccount": "Don't have an account?",
+  "register": "Register",
+  "registerTitle": "Create Account",
+  "registerSubtitle": "Sign up to get started",
+  "fullName": "Full Name",
+  "fullNameHint": "Enter your full name",
+  "alreadyHaveAccount": "Already have an account?",
+  "logout": "Logout",
+  "invalidEmail": "Please enter a valid email",
+  "invalidPassword": "Password must be at least 6 characters",
+  "invalidName": "Name is too short"
 }

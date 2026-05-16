@@ -23,5 +23,25 @@
   "search": "بحث",
   "@search": { "description": "Search label" },
   "back": "رجوع",
-  "@back": { "description": "Back navigation label" }
+  "@back": { "description": "Back navigation label" },
+
+  "login": "تسجيل الدخول",
+  "loginTitle": "مرحباً بعودتك",
+  "loginSubtitle": "سجل الدخول إلى حسابك لمواصلة التسوق",
+  "email": "البريد الإلكتروني",
+  "emailHint": "أدخل بريدك الإلكتروني",
+  "password": "كلمة المرور",
+  "passwordHint": "أدخل كلمة المرور",
+  "forgotPassword": "نسيت كلمة المرور؟",
+  "dontHaveAccount": "ليس لديك حساب؟",
+  "register": "إنشاء حساب",
+  "registerTitle": "إنشاء حساب جديد",
+  "registerSubtitle": "قم بالتسجيل للبدء",
+  "fullName": "الاسم الكامل",
+  "fullNameHint": "أدخل اسمك الكامل",
+  "alreadyHaveAccount": "لديك حساب بالفعل؟",
+  "logout": "تسجيل الخروج",
+  "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
+  "invalidPassword": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+  "invalidName": "الاسم قصير جداً"
 }
