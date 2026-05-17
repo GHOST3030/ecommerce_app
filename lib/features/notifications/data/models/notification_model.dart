@@ -1,7 +1,3 @@
-// ─────────────────────────────────────────────────────────────
-// MODEL
-// ─────────────────────────────────────────────────────────────
-
 class NotificationModel {
   const NotificationModel({
     required this.id,
@@ -18,7 +14,7 @@ class NotificationModel {
   final String userId;
   final String title;
   final String body;
-  final String type; // raw DB enum string
+  final String type;
   final bool isRead;
   final DateTime createdAt;
   final String? orderId;

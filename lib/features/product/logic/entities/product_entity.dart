@@ -29,32 +29,24 @@ class ProductEntity {
   final int sortOrder;
   final DateTime createdAt;
 
-  // ── Computed helpers ─────────────────────────────────────
-
-  /// Returns discountPrice if set, otherwise basePrice.
   double get effectivePrice => discountPrice ?? basePrice;
 
-  /// True when a discount is active.
   bool get hasDiscount => discountPrice != null && discountPrice! < basePrice;
 
-  /// Discount percentage rounded to nearest integer (0 when no discount).
   int get discountPercent {
     if (!hasDiscount) return 0;
     return (((basePrice - discountPrice!) / basePrice) * 100).round();
   }
 
-  /// First image URL, or empty string when images list is empty.
   String get thumbnailUrl => images.isNotEmpty ? images.first : '';
 
-  /// Localized name based on [languageCode] ('ar' → Arabic, else English).
   String localizedName(String languageCode) =>
       languageCode == 'ar' ? nameAr : nameEn;
 
-  /// Localized description based on [languageCode].
   String localizedDescription(String languageCode) =>
       languageCode == 'ar' ? descriptionAr : descriptionEn;
 
-  // ── Equality ─────────────────────────────────────────────
+  static const Object _sentinel = Object();
 
   ProductEntity copyWith({
     String? categoryId,
@@ -63,26 +55,28 @@ class ProductEntity {
     String? descriptionEn,
     String? descriptionAr,
     double? basePrice,
-    double? discountPrice,
+    Object? discountPrice = _sentinel,
     List<String>? images,
     bool? isActive,
     bool? isFeatured,
     int? sortOrder,
   }) {
     return ProductEntity(
-      id: id,
-      categoryId: categoryId ?? this.categoryId,
-      nameEn: nameEn ?? this.nameEn,
-      nameAr: nameAr ?? this.nameAr,
+      id:            id,
+      categoryId:    categoryId    ?? this.categoryId,
+      nameEn:        nameEn        ?? this.nameEn,
+      nameAr:        nameAr        ?? this.nameAr,
       descriptionEn: descriptionEn ?? this.descriptionEn,
       descriptionAr: descriptionAr ?? this.descriptionAr,
-      basePrice: basePrice ?? this.basePrice,
-      discountPrice: discountPrice ?? this.discountPrice,
-      images: images ?? this.images,
-      isActive: isActive ?? this.isActive,
-      isFeatured: isFeatured ?? this.isFeatured,
-      sortOrder: sortOrder ?? this.sortOrder,
-      createdAt: createdAt,
+      basePrice:     basePrice     ?? this.basePrice,
+      discountPrice: discountPrice == _sentinel
+          ? this.discountPrice
+          : discountPrice as double?,
+      images:        images        ?? this.images,
+      isActive:      isActive      ?? this.isActive,
+      isFeatured:    isFeatured    ?? this.isFeatured,
+      sortOrder:     sortOrder     ?? this.sortOrder,
+      createdAt:     createdAt,
     );
   }
 

@@ -18,7 +18,7 @@ class ProductVariantModel {
   final String id;
   final String productId;
   final String sku;
-  final String size; // raw DB enum string — mapped to ProductSize in mapper
+  final String size;
   final String colorEn;
   final String colorAr;
   final String colorHex;
@@ -28,8 +28,6 @@ class ProductVariantModel {
   final bool isActive;
   final int sortOrder;
   final DateTime createdAt;
-
-  // ── Deserialization ───────────────────────────────────────
 
   factory ProductVariantModel.fromJson(Map<String, dynamic> json) {
     return ProductVariantModel(
@@ -51,8 +49,6 @@ class ProductVariantModel {
     );
   }
 
-  // ── Serialization ─────────────────────────────────────────
-
   Map<String, dynamic> toJson() {
     return {
       'id':             id,
@@ -71,8 +67,6 @@ class ProductVariantModel {
     };
   }
 
-  /// Produces a JSON map suitable for INSERT / UPDATE calls.
-  /// Excludes [id] and [createdAt] — managed by Supabase.
   Map<String, dynamic> toInsertJson() {
     return {
       'product_id':     productId,

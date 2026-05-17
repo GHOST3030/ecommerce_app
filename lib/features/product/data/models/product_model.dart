@@ -29,8 +29,6 @@ class ProductModel {
   final int sortOrder;
   final DateTime createdAt;
 
-  // ── Deserialization ───────────────────────────────────────
-
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
       id:            json['id']             as String,
@@ -43,7 +41,6 @@ class ProductModel {
       discountPrice: json['discount_price'] == null
           ? null
           : (json['discount_price'] as num).toDouble(),
-      // Supabase returns text[] as List<dynamic>
       images: (json['images'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -54,8 +51,6 @@ class ProductModel {
       createdAt:  DateTime.parse(json['created_at'] as String),
     );
   }
-
-  // ── Serialization ─────────────────────────────────────────
 
   Map<String, dynamic> toJson() {
     return {
@@ -75,8 +70,6 @@ class ProductModel {
     };
   }
 
-  /// Produces a JSON map suitable for INSERT / UPDATE calls.
-  /// Excludes [id] and [createdAt] — managed by Supabase.
   Map<String, dynamic> toInsertJson() {
     return {
       'category_id':    categoryId,

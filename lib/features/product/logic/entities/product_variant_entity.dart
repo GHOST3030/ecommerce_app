@@ -8,7 +8,6 @@ enum ProductSize {
   xxxl,
   oneSize;
 
-  /// Maps the Supabase enum string to [ProductSize].
   static ProductSize fromString(String value) {
     return switch (value.toUpperCase()) {
       'XS'       => ProductSize.xs,
@@ -23,7 +22,6 @@ enum ProductSize {
     };
   }
 
-  /// Returns the Supabase-compatible enum string.
   String toDbString() {
     return switch (this) {
       ProductSize.xs      => 'XS',
@@ -37,7 +35,6 @@ enum ProductSize {
     };
   }
 
-  /// Display label used in UI size selectors.
   String get displayLabel {
     return switch (this) {
       ProductSize.xs      => 'XS',
@@ -51,8 +48,6 @@ enum ProductSize {
     };
   }
 }
-
-// ─────────────────────────────────────────────────────────────
 
 class ProductVariantEntity {
   const ProductVariantEntity({
@@ -85,28 +80,21 @@ class ProductVariantEntity {
   final int sortOrder;
   final DateTime createdAt;
 
-  // ── Computed helpers ─────────────────────────────────────
-
-  /// Returns discountPrice if set, otherwise price.
   double get effectivePrice => discountPrice ?? price;
 
-  /// True when a discount is active on this variant.
   bool get hasDiscount => discountPrice != null && discountPrice! < price;
 
-  /// Discount percentage rounded to nearest integer (0 when no discount).
   int get discountPercent {
     if (!hasDiscount) return 0;
     return (((price - discountPrice!) / price) * 100).round();
   }
 
-  /// True when stock > 0.
   bool get inStock => stock > 0;
 
-  /// Localized color name based on [languageCode].
   String localizedColor(String languageCode) =>
       languageCode == 'ar' ? colorAr : colorEn;
 
-  // ── Equality ─────────────────────────────────────────────
+  static const Object _sentinel = Object();
 
   ProductVariantEntity copyWith({
     String? sku,
@@ -115,7 +103,7 @@ class ProductVariantEntity {
     String? colorAr,
     String? colorHex,
     double? price,
-    double? discountPrice,
+    Object? discountPrice = _sentinel,
     int? stock,
     bool? isActive,
     int? sortOrder,
@@ -129,7 +117,9 @@ class ProductVariantEntity {
       colorAr:       colorAr       ?? this.colorAr,
       colorHex:      colorHex      ?? this.colorHex,
       price:         price         ?? this.price,
-      discountPrice: discountPrice ?? this.discountPrice,
+      discountPrice: discountPrice == _sentinel
+          ? this.discountPrice
+          : discountPrice as double?,
       stock:         stock         ?? this.stock,
       isActive:      isActive      ?? this.isActive,
       sortOrder:     sortOrder     ?? this.sortOrder,

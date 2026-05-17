@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/features/cart/data/models/cart_item_model.dart';
 import 'package:ecommerce_app/features/cart/logic/entities/cart_item_entity.dart';
+import 'package:ecommerce_app/features/product/data/mappers/product_variant_mapper.dart';
 
 class CartItemMapper {
   const CartItemMapper._();
@@ -11,6 +12,9 @@ class CartItemMapper {
       variantId: model.variantId,
       quantity:  model.quantity,
       createdAt: model.createdAt,
+      variant: model.variant != null
+          ? ProductVariantMapper.toEntity(model.variant!)
+          : null,
     );
   }
 

@@ -1,7 +1,3 @@
-// ─────────────────────────────────────────────────────────────
-// ORDER ITEM MODEL
-// ─────────────────────────────────────────────────────────────
-
 class OrderItemModel {
   const OrderItemModel({
     required this.id,
@@ -47,10 +43,6 @@ class OrderItemModel {
       };
 }
 
-// ─────────────────────────────────────────────────────────────
-// ORDER MODEL
-// ─────────────────────────────────────────────────────────────
-
 class OrderModel {
   const OrderModel({
     required this.id,
@@ -65,7 +57,7 @@ class OrderModel {
 
   final String id;
   final String userId;
-  final String status; // raw DB enum string
+  final String status;
   final double totalAmount;
   final Map<String, dynamic> shippingAddress;
   final String notes;

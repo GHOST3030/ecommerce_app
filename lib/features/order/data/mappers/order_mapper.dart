@@ -4,8 +4,6 @@ import 'package:ecommerce_app/features/order/logic/entities/order_entity.dart';
 class OrderMapper {
   const OrderMapper._();
 
-  // ── Order Item ───────────────────────────────────────────
-
   static OrderItemEntity toItemEntity(OrderItemModel model) {
     return OrderItemEntity(
       id:        model.id,
@@ -27,8 +25,6 @@ class OrderMapper {
       createdAt: entity.createdAt,
     );
   }
-
-  // ── Order ────────────────────────────────────────────────
 
   static OrderEntity toEntity(OrderModel model) {
     return OrderEntity(

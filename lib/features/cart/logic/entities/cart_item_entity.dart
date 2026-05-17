@@ -15,20 +15,12 @@ class CartItemEntity {
   final String variantId;
   final int quantity;
   final DateTime createdAt;
-
-  /// Eagerly-loaded variant — populated when fetched with a join.
   final ProductVariantEntity? variant;
 
-  // ── Computed helpers ─────────────────────────────────────
-
-  /// Line total = variant effective price × quantity.
-  /// Returns null when variant is not loaded.
   double? get lineTotal {
     if (variant == null) return null;
     return variant!.effectivePrice * quantity;
   }
-
-  // ── Equality / copy ──────────────────────────────────────
 
   CartItemEntity copyWith({
     int? quantity,

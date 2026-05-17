@@ -19,5 +19,4 @@ class SupabaseService {
   static SupabaseStorageClient get storage => client.storage;
 
   static RealtimeClient get realtime => client.realtime;
-
 }

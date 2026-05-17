@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/features/product/data/mappers/product_mapper.dart';
 import 'package:ecommerce_app/features/wishlist/data/models/wishlist_item_model.dart';
 import 'package:ecommerce_app/features/wishlist/logic/entities/wishlist_item_entity.dart';
 
@@ -10,6 +11,9 @@ class WishlistItemMapper {
       userId:    model.userId,
       productId: model.productId,
       createdAt: model.createdAt,
+      product: model.product != null
+          ? ProductMapper.toEntity(model.product!)
+          : null,
     );
   }
 

@@ -1,4 +1,3 @@
-
 import 'package:ecommerce_app/core/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -14,4 +13,3 @@ extension ContextExtension on BuildContext {
   bool get isRtl => Directionality.of(this) == TextDirection.rtl;
   bool get isDark => Theme.of(this).brightness == Brightness.dark;
 }
-

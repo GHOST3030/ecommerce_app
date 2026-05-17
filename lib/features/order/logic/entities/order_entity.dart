@@ -37,8 +37,6 @@ enum OrderStatus {
       this == refunded;
 }
 
-// ─────────────────────────────────────────────────────────────
-
 class OrderItemEntity {
   const OrderItemEntity({
     required this.id,
@@ -69,8 +67,6 @@ class OrderItemEntity {
   int get hashCode => id.hashCode;
 }
 
-// ─────────────────────────────────────────────────────────────
-
 class OrderEntity {
   const OrderEntity({
     required this.id,
@@ -90,15 +86,9 @@ class OrderEntity {
   final Map<String, dynamic> shippingAddress;
   final String notes;
   final DateTime createdAt;
-
-  /// Eagerly-loaded line items — populated when fetched with a join.
   final List<OrderItemEntity> items;
 
-  // ── Computed helpers ─────────────────────────────────────
-
   int get totalItems => items.fold(0, (sum, i) => sum + i.quantity);
-
-  // ── Equality / copy ──────────────────────────────────────
 
   OrderEntity copyWith({
     OrderStatus? status,
@@ -107,12 +97,12 @@ class OrderEntity {
     return OrderEntity(
       id:              id,
       userId:          userId,
-      status:          status  ?? this.status,
+      status:          status ?? this.status,
       totalAmount:     totalAmount,
       shippingAddress: shippingAddress,
       notes:           notes,
       createdAt:       createdAt,
-      items:           items   ?? this.items,
+      items:           items  ?? this.items,
     );
   }
 

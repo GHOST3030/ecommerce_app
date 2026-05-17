@@ -18,7 +18,11 @@ class AppLoading extends StatelessWidget {
 }
 
 class AppLoadingOverlay extends StatelessWidget {
-  const AppLoadingOverlay({super.key, required this.child, required this.isLoading});
+  const AppLoadingOverlay({
+    super.key,
+    required this.child,
+    required this.isLoading,
+  });
 
   final Widget child;
   final bool isLoading;
@@ -29,9 +33,11 @@ class AppLoadingOverlay extends StatelessWidget {
       children: [
         child,
         if (isLoading)
-          const ColoredBox(
-            color: Colors.black26,
-            child: AppLoading(color: Colors.white),
+          const Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black26,
+              child: AppLoading(color: Colors.white),
+            ),
           ),
       ],
     );

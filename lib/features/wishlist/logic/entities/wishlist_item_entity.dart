@@ -13,8 +13,6 @@ class WishlistItemEntity {
   final String userId;
   final String productId;
   final DateTime createdAt;
-
-  /// Eagerly-loaded product — populated when fetched with a join.
   final ProductEntity? product;
 
   WishlistItemEntity copyWith({ProductEntity? product}) {

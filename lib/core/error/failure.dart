@@ -1,5 +1,3 @@
-
-// ignore: always_use_package_imports
 import 'app_exception.dart';
 
 sealed class Failure {
