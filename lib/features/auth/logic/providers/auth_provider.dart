@@ -14,23 +14,13 @@ final currentUserProvider = Provider<UserEntity?>((ref) {
 final authStateProvider = Provider<AuthState>((ref) {
   final authAsync = ref.watch(authNotifierProvider);
 
-if (authAsync.isLoading) {
-  print('AuthState is loading, returning AuthLoading');
+  if (authAsync.isLoading) {
     return const AuthLoading();
   } else if (authAsync.hasError) {
-    print('AuthState has error: ${authAsync.error}');
     return AuthError(authAsync.error.toString());
   } else if (authAsync.hasValue) {
-    print('AuthState has value: ${authAsync.value}');
     final user = authAsync.value;
-    if (user != null) {
-      print('User is authenticated: ${user.email}');
-      return Authenticated(user);
-    } else {
-      print('User is unauthenticated');
-      return const Unauthenticated();
-    }
-  } else {
-    return const AuthInitial();
+    return user != null ? Authenticated(user) : const Unauthenticated();
   }
+  return const AuthInitial();
 });

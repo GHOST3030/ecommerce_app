@@ -28,10 +28,8 @@ class AuthRepositoryImpl implements IAuthRepository {
     try {
       await _datasource.signIn(email: email, password: password);
     } on supabase.AuthException catch (e) {
-       print('Error in signIn: $e');
       throw AuthException(e.message);
     } catch (e) {
-      print('Error in signIn: $e');
       throw UnknownException(e.toString());
     }
   }

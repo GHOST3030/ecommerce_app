@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:ecommerce_app/core/supabase/supabase_service.dart';
 import 'package:ecommerce_app/features/auth/logic/providers/auth_provider.dart';
 import 'package:ecommerce_app/features/auth/logic/states/auth_state.dart';
 import 'package:ecommerce_app/features/auth/ui/screens/login_screen.dart';
@@ -11,13 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authStateProvider);
+  final notifier = _AuthStateNotifier(ref);
 
   return GoRouter(
-    debugLogDiagnostics: true,
-    refreshListenable:
-        GoRouterRefreshStream(SupabaseService.auth.onAuthStateChange),
-    //   initialLocation: '/splash',
+    debugLogDiagnostics: false,
+    refreshListenable: notifier,
     routes: [
       GoRoute(
         path: '/splash',
@@ -39,46 +36,40 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'home',
         builder: (_, __) => Scaffold(
           body: Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    ref.read(authNotifierProvider.notifier).signOut();
-                  },
-                  child: const Text("Logout"))),
+            child: ElevatedButton(
+              onPressed: () => ref.read(authNotifierProvider.notifier).signOut(),
+              child: const Text('Logout'),
+            ),
+          ),
         ),
       ),
     ],
-
     redirect: (context, state) {
+      final authState = ref.read(authStateProvider);
+
       final isSplash = state.matchedLocation == '/splash';
       final isAuth = state.matchedLocation == '/login' ||
           state.matchedLocation == '/register';
 
-      if (authState is AuthLoading) {
-        return null; // Stay on the current page while loading
-      } else if (authState is Authenticated) {
-        print('User is authenticated, redirecting to home');
-        if (isAuth || isSplash) {
-          return '/'; // Redirect authenticated users to home
-        }
-      } else if (authState is Unauthenticated) {
-        print('User is unauthenticated, redirecting to login');
-        if (!isAuth && !isSplash) {
-          return '/login'; // Redirect unauthenticated users to login
-        }
+      if (authState is AuthLoading || authState is AuthInitial) {
+        return isSplash ? null : '/splash';
       }
-      // No redirection
+
+      if (authState is Authenticated) {
+        return (isAuth || isSplash) ? '/' : null;
+      }
+
+      if (authState is Unauthenticated || authState is AuthError) {
+        return isAuth ? null : '/login';
+      }
+
+      return null;
     },
   );
 });
 
-class GoRouterRefreshStream extends ChangeNotifier {
-  late final StreamSubscription<dynamic> _sub;
-  GoRouterRefreshStream(Stream<dynamic> stream) {
-    _sub = stream.listen((_) => notifyListeners());
-  }
-  @override
-  void dispose() {
-    _sub.cancel();
-    super.dispose();
+class _AuthStateNotifier extends ChangeNotifier {
+  _AuthStateNotifier(Ref ref) {
+    ref.listen(authStateProvider, (_, __) => notifyListeners());
   }
 }

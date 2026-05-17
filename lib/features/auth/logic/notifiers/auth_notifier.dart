@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:ecommerce_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ecommerce_app/features/auth/logic/entities/user_entity.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,25 +8,19 @@ class AuthNotifier extends AsyncNotifier<UserEntity?> {
   @override
   FutureOr<UserEntity?> build() async {
     final repository = ref.watch(authRepositoryProvider);
-    
-    // Listen to auth state changes from Supabase
+
     final subscription = repository.authStateChanges().listen(
       (user) {
         state = AsyncData(user);
       },
-      onError: (error) {
-        state = AsyncError(error, StackTrace.current);
+      onError: (Object error, StackTrace stack) {
+        state = AsyncError(error, stack);
       },
     );
 
-    ref.onDispose(() => subscription.cancel());
+    ref.onDispose(subscription.cancel);
 
-    try {
-      return await repository.getCurrentUser();
-    } catch (e, stack) {
-      state = AsyncError(e, stack);
-      return null;
-    }
+    return repository.getCurrentUser();
   }
 
   Future<void> signIn({required String email, required String password}) async {
