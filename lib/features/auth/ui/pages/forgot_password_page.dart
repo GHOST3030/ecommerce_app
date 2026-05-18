@@ -39,16 +39,17 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
     } else if (mounted) {
       final error = ref.read(authErrorProvider);
       if (error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(error),
+        //     backgroundColor: AppColors.error,
+        //     behavior: SnackBarBehavior.floating,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(AppRadius.sm),
+        //     ),
+        //   ),
+        // );
+        print('Forgot password failed: $error');
       }
     }
   }

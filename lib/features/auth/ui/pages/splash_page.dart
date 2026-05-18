@@ -1,7 +1,7 @@
+import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logic/provider/auth_providers.dart';
-import '../widget/app_theme.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -87,7 +87,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                   Text(
                     'Your gateway to everything',
                     style: TextStyle(
-                      color: Colors.white.withOpacity(0.55),
+                      color: Colors.white.withValues(alpha: 0.55),
                       fontSize: 15,
                     ),
                   ),
@@ -96,7 +96,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
                     width: 24,
                     height: 24,
                     child: CircularProgressIndicator(
-                      color: Colors.white.withOpacity(0.5),
+                      color: Colors.white.withValues(alpha: 0.5),
                       strokeWidth: 2,
                     ),
                   ),

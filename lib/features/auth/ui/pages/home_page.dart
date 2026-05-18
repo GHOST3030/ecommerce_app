@@ -1,8 +1,9 @@
+import 'package:ecommerce_app/core/extensions/context_extension.dart';
+import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logic/provider/auth_providers.dart';
-import '../widget/app_theme.dart';
-import '../widget/primary_button.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -17,9 +18,9 @@ class HomePage extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
-        title: const Text(
-          'AppName',
-          style: TextStyle(
+        title:  Text(
+          context.l10n.appName,
+          style:const TextStyle(
             color: AppColors.textPrimary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
@@ -81,7 +82,7 @@ class HomePage extends ConsumerWidget {
                     Text(
                       user?.email ?? '',
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 14,
                       ),
                     ),
@@ -92,7 +93,7 @@ class HomePage extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(AppRadius.full),
                       ),
                       child: Row(

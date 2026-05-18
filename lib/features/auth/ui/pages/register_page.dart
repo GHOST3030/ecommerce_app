@@ -1,3 +1,5 @@
+import 'package:ecommerce_app/core/extensions/context_extension.dart';
+import 'package:ecommerce_app/core/router/app_routes.dart';
 import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
 import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
 import 'package:ecommerce_app/features/auth/ui/widget/auth_scaffold.dart';
@@ -45,16 +47,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
     if (!success && mounted) {
       final error = ref.read(authErrorProvider);
       if (error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(error),
+        //     backgroundColor: AppColors.error,
+        //     behavior: SnackBarBehavior.floating,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(AppRadius.sm),
+        //     ),
+        //   ),
+        // );
+
+
+        print('Registration failed: $error');
       }
     }
   }
@@ -83,7 +88,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ],
             AuthTextField(
               controller: _fullNameController,
-              label: 'Full Name',
+              label: context.l10n.fullName,
               hint: 'John Doe',
               prefixIcon: const Icon(Icons.person_outline_rounded),
               validator: Validators.fullName,
@@ -92,7 +97,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: _emailController,
-              label: 'Email',
+              label: context.l10n.email,
               hint: 'you@example.com',
               keyboardType: TextInputType.emailAddress,
               prefixIcon: const Icon(Icons.email_outlined),
@@ -102,7 +107,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: _passwordController,
-              label: 'Password',
+              label: context.l10n.password,
               obscure: true,
               prefixIcon: const Icon(Icons.lock_outline_rounded),
               validator: Validators.password,
@@ -111,7 +116,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: _confirmPasswordController,
-              label: 'Confirm Password',
+              label: context.l10n.confirmPassword,
               obscure: true,
               textInputAction: TextInputAction.done,
               prefixIcon: const Icon(Icons.lock_outline_rounded),
@@ -122,7 +127,7 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             ),
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(
-              label: 'Create Account',
+              label: context.l10n.register,
               onPressed: _submit,
               isLoading: isLoading,
             ),
@@ -130,16 +135,19 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Already have an account?',
-                  style: TextStyle(
+                Text(
+                  context.l10n.dontHaveAccount,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 TextLinkButton(
-                  label: 'Sign In',
-                  onPressed: () => context.pop(),
+                  label: context.l10n.login,
+                  onPressed: () {
+                    ref.read(authNotifierProvider.notifier).clearError();
+                    context.push(AppRoutes.login);
+                  },
                 ),
               ],
             ),

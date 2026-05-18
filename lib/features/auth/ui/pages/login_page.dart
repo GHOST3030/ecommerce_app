@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/extensions/context_extension.dart';
 import 'package:ecommerce_app/core/router/app_routes.dart';
 import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
 import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
@@ -41,16 +42,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (!success && mounted) {
       final error = ref.read(authErrorProvider);
       if (error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: AppColors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
-          ),
-        );
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text(error),
+        //     backgroundColor: AppColors.error,
+        //     behavior: SnackBarBehavior.floating,
+        //     shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.circular(AppRadius.sm),
+        //     ),
+        //   ),
+        // );
+        print('Login failed: $error');
       }
     }
   }
@@ -67,9 +69,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: AppSpacing.xl),
-            const AuthHeader(
-              title: 'Welcome back',
-              subtitle: 'Sign in to continue to your account.',
+            AuthHeader(
+              title: context.l10n.loginTitle,
+              subtitle: context.l10n.loginSubtitle,
             ),
             const SizedBox(height: AppSpacing.xl),
             if (error != null) ...[
@@ -78,8 +80,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ],
             AuthTextField(
               controller: _emailController,
-              label: 'Email',
-              hint: 'you@example.com',
+              label: context.l10n.email,
+              hint: context.l10n.emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: const Icon(Icons.email_outlined),
               validator: Validators.email,
@@ -88,7 +90,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             const SizedBox(height: AppSpacing.md),
             AuthTextField(
               controller: _passwordController,
-              label: 'Password',
+              label: context.l10n.password,
+              hint: context.l10n.passwordHint,
               obscure: true,
               textInputAction: TextInputAction.done,
               prefixIcon: const Icon(Icons.lock_outline_rounded),
@@ -100,13 +103,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             Align(
               alignment: Alignment.centerRight,
               child: TextLinkButton(
-                label: 'Forgot password?',
+                label: context.l10n.forgotPassword,
                 onPressed: () => context.push(AppRoutes.forgotPassword),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             PrimaryButton(
-              label: 'Sign In',
+              label: context.l10n.login,
               onPressed: _submit,
               isLoading: isLoading,
             ),
@@ -114,16 +117,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  "Don't have an account?",
-                  style: TextStyle(
+                Text(
+                  context.l10n.dontHaveAccount,
+                  style: const TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14,
                   ),
                 ),
                 TextLinkButton(
-                  label: 'Sign Up',
-                  onPressed: () => context.push(AppRoutes.register),
+                  label: context.l10n.register,
+                  onPressed: () {
+                    ref.read(authNotifierProvider.notifier).clearError();
+                    context.push(AppRoutes.register);
+                  },
                 ),
               ],
             ),

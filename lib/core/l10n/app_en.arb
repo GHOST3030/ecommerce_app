@@ -31,6 +31,7 @@
   "email": "Email",
   "emailHint": "Enter your email",
   "password": "Password",
+  "confirmPassword": "Confirm Password",
   "passwordHint": "Enter your password",
   "forgotPassword": "Forgot Password?",
   "dontHaveAccount": "Don't have an account?",
