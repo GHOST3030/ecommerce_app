@@ -15,7 +15,6 @@ import 'package:go_router/go_router.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final notifier = ref.watch(authNotifierProvider.notifier);
   final listenable = _AuthStateListenable(ref);
 
   return GoRouter(
@@ -29,16 +28,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final isInitial = authState.status == AuthStatus.initial;
       final isAuthenticated = authState.isAuthenticated;
       final isEmailUnverified = authState.requiresEmailVerification;
+      final isPasswordRecovery = authState.isPasswordRecovery;
 
-      final authRoutes = [
+      final guestRoutes = [
         AppRoutes.login,
         AppRoutes.register,
         AppRoutes.forgotPassword,
-        AppRoutes.resetPassword,
       ];
 
       if (location == AppRoutes.splash) {
         if (isInitial) return null;
+        if (isPasswordRecovery) return AppRoutes.resetPassword;
         if (isAuthenticated) return AppRoutes.home;
         if (isEmailUnverified) return AppRoutes.emailVerification;
         return AppRoutes.login;
@@ -46,7 +46,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       if (isInitial) return AppRoutes.splash;
 
-      if (isAuthenticated && authRoutes.contains(location)) {
+      if (isPasswordRecovery && location != AppRoutes.resetPassword) {
+        return AppRoutes.resetPassword;
+      }
+
+      if (isAuthenticated &&
+          (guestRoutes.contains(location) ||
+              location == AppRoutes.resetPassword)) {
         return AppRoutes.home;
       }
 
@@ -56,7 +62,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 
       if (!isAuthenticated &&
           !isEmailUnverified &&
-          !authRoutes.contains(location) &&
+          !isPasswordRecovery &&
+          !guestRoutes.contains(location) &&
           location != AppRoutes.splash) {
         return AppRoutes.login;
       }

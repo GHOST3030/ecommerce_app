@@ -1,5 +1,4 @@
 import 'package:ecommerce_app/core/router/app_routes.dart';
-import 'package:ecommerce_app/features/auth/logic/provider/auth_notifier.dart';
 import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
 import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
 import 'package:ecommerce_app/features/auth/ui/widget/auth_scaffold.dart';

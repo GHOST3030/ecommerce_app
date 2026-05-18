@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:supabase_flutter/supabase_flutter.dart' hide UserAttributes;
-import 'package:supabase_flutter/supabase_flutter.dart' as sb;
-import '../../data/datasource/app_exception.dart';
-import '../../data/datasource/auth_remote_datasource.dart';
-import '../../logic/entity/user_entity.dart';
-import '../../logic/repository/auth_repository.dart';
+import 'package:ecommerce_app/features/auth/data/datasource/app_exception.dart';
+import 'package:ecommerce_app/features/auth/data/datasource/auth_remote_datasource.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/auth_user_change.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/user_entity.dart';
+import 'package:ecommerce_app/features/auth/logic/repository/auth_repository.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _datasource;
@@ -65,7 +65,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Stream<UserEntity?> get authStateChanges => _datasource.authStateChanges;
+  Stream<AuthUserChange> get authStateChanges => _datasource.authStateChanges;
 
   Future<T> _execute<T>(Future<T> Function() call) async {
     try {

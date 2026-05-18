@@ -1,9 +1,9 @@
+import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/auth_scaffold.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/primary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logic/provider/auth_providers.dart';
-import '../widget/app_theme.dart';
-import '../widget/auth_scaffold.dart';
-import '../widget/primary_button.dart';
 
 class EmailVerificationPage extends ConsumerWidget {
   const EmailVerificationPage({super.key});
@@ -22,7 +22,7 @@ class EmailVerificationPage extends ConsumerWidget {
             width: 88,
             height: 88,
             decoration: BoxDecoration(
-              color: AppColors.accent.withOpacity(0.1),
+              color: AppColors.accent.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -43,7 +43,7 @@ class EmailVerificationPage extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'We sent a verification link to\n${user?.email ?? 'your email'}',
+            'We sent a verification link to\n${user?.email ?? 'your email'}.\nOpen it and we will continue automatically.',
             style: const TextStyle(
               color: AppColors.textSecondary,
               fontSize: 15,

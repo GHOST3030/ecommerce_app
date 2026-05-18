@@ -1,5 +1,7 @@
+import 'package:ecommerce_app/core/config/app_config.dart';
+import 'package:ecommerce_app/features/auth/data/model/user_model.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/auth_user_change.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../model/user_model.dart';
 
 class AuthRemoteDatasource {
   final SupabaseClient _client;
@@ -18,7 +20,7 @@ class AuthRemoteDatasource {
     final user = response.user;
     if (user == null) throw Exception('Sign in failed: no user returned');
 
-    return _fetchProfile(user.id, isEmailVerified: user.emailConfirmedAt != null);
+    return _fetchUser(user.id, isEmailVerified: user.emailConfirmedAt != null);
   }
 
   Future<UserModel> signUp({
@@ -29,6 +31,7 @@ class AuthRemoteDatasource {
     final response = await _client.auth.signUp(
       email: email,
       password: password,
+      emailRedirectTo: AppConfig.emailVerificationRedirectUrl,
       data: {'full_name': fullName},
     );
 
@@ -39,14 +42,13 @@ class AuthRemoteDatasource {
       id: user.id,
       email: user.email ?? email,
       fullName: fullName,
+      phone: '',
       avatarUrl: null,
-      createdAt: user.createdAt != null
-          ? DateTime.parse(user.createdAt!)
-          : DateTime.now(),
+      role: 'user',
+      createdAt: DateTime.parse(user.createdAt),
       isEmailVerified: user.emailConfirmedAt != null,
     );
 
-    await _insertProfile(model);
     return model;
   }
 
@@ -55,7 +57,10 @@ class AuthRemoteDatasource {
   }
 
   Future<void> forgotPassword({required String email}) async {
-    await _client.auth.resetPasswordForEmail(email);
+    await _client.auth.resetPasswordForEmail(
+      email,
+      redirectTo: AppConfig.passwordResetRedirectUrl,
+    );
   }
 
   Future<void> resetPassword({required String newPassword}) async {
@@ -65,53 +70,78 @@ class AuthRemoteDatasource {
   Future<UserModel?> getCurrentUser() async {
     final user = _client.auth.currentUser;
     if (user == null) return null;
-    return _fetchProfile(user.id, isEmailVerified: user.emailConfirmedAt != null);
+    return _fetchUser(user.id, isEmailVerified: user.emailConfirmedAt != null);
   }
 
   Future<UserModel?> getProfile({required String userId}) async {
     final user = _client.auth.currentUser;
     if (user == null) return null;
-    return _fetchProfile(userId, isEmailVerified: user.emailConfirmedAt != null);
+    return _fetchUser(userId, isEmailVerified: user.emailConfirmedAt != null);
   }
 
   Future<void> refreshSession() async {
     await _client.auth.refreshSession();
   }
 
-  Stream<UserModel?> get authStateChanges {
+  Stream<AuthUserChange> get authStateChanges {
     return _client.auth.onAuthStateChange.asyncMap((data) async {
+      final type = _mapAuthChangeEvent(data.event);
       final user = data.session?.user;
-      if (user == null) return null;
+      if (user == null) return AuthUserChange(type: type);
+
       try {
-        return await _fetchProfile(
+        final model = await _fetchUser(
           user.id,
           isEmailVerified: user.emailConfirmedAt != null,
         );
+        return AuthUserChange(type: type, user: model);
       } catch (_) {
-        return UserModel.fromSupabaseUser(
-          {'id': user.id, 'email': user.email, 'created_at': user.createdAt},
+        return AuthUserChange(
+          type: type,
+          user: UserModel.fromAuthUser(
+            {
+              'id': user.id,
+              'email': user.email,
+              'created_at': user.createdAt,
+              'email_confirmed_at': user.emailConfirmedAt,
+            },
+          ),
         );
       }
     });
   }
 
-  Future<UserModel> _fetchProfile(
+  Future<UserModel> _fetchUser(
     String userId, {
     required bool isEmailVerified,
   }) async {
-    final data = await _client
-        .from('profiles')
-        .select()
-        .eq('id', userId)
-        .single();
+    final data = await _client.from('users').select().eq('id', userId).single();
 
-    return UserModel.fromSupabaseProfile(
+    return UserModel.fromJson(
       data,
       isEmailVerified: isEmailVerified,
     );
   }
 
-  Future<void> _insertProfile(UserModel model) async {
-    await _client.from('profiles').upsert(model.toProfileInsert());
+  AuthUserChangeType _mapAuthChangeEvent(AuthChangeEvent event) {
+    switch (event) {
+      case AuthChangeEvent.initialSession:
+        return AuthUserChangeType.initialSession;
+      case AuthChangeEvent.passwordRecovery:
+        return AuthUserChangeType.passwordRecovery;
+      case AuthChangeEvent.signedIn:
+        return AuthUserChangeType.signedIn;
+      case AuthChangeEvent.signedOut:
+        return AuthUserChangeType.signedOut;
+      case AuthChangeEvent.tokenRefreshed:
+        return AuthUserChangeType.tokenRefreshed;
+      case AuthChangeEvent.userUpdated:
+        return AuthUserChangeType.userUpdated;
+      // ignore: deprecated_member_use
+      case AuthChangeEvent.userDeleted:
+        return AuthUserChangeType.userDeleted;
+      case AuthChangeEvent.mfaChallengeVerified:
+        return AuthUserChangeType.mfaChallengeVerified;
+    }
   }
 }

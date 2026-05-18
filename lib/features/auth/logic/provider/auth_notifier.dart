@@ -1,13 +1,13 @@
 import 'dart:async';
+import 'package:ecommerce_app/features/auth/data/datasource/app_exception.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/auth_user_change.dart';
+import 'package:ecommerce_app/features/auth/logic/repository/auth_repository.dart';
+import 'package:ecommerce_app/features/auth/logic/state/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/datasource/app_exception.dart';
-import '../entity/user_entity.dart';
-import '../repository/auth_repository.dart';
-import '../state/auth_state.dart';
 
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _repository;
-  StreamSubscription<UserEntity?>? _authSubscription;
+  StreamSubscription<AuthUserChange>? _authSubscription;
 
   AuthNotifier(this._repository) : super(const AuthState.initial()) {
     _listenToAuthChanges();
@@ -15,11 +15,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   void _listenToAuthChanges() {
     _authSubscription = _repository.authStateChanges.listen(
-      (user) {
+      (change) {
+        final user = change.user;
         if (user == null) {
           state = state.copyWith(
             status: AuthStatus.unauthenticated,
             clearUser: true,
+            isLoading: false,
+            clearError: true,
+          );
+        } else if (change.type == AuthUserChangeType.passwordRecovery) {
+          state = state.copyWith(
+            status: AuthStatus.passwordRecovery,
+            user: user,
             isLoading: false,
             clearError: true,
           );
@@ -160,7 +168,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _repository.resetPassword(newPassword: newPassword);
-      state = state.copyWith(isLoading: false);
+      await _repository.signOut();
+      state = const AuthState(status: AuthStatus.unauthenticated);
       return true;
     } on AppException catch (e) {
       state = state.copyWith(isLoading: false, errorMessage: e.message);

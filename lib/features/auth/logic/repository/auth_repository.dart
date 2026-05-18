@@ -1,4 +1,5 @@
-import '../entity/user_entity.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/auth_user_change.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/user_entity.dart';
 
 abstract class AuthRepository {
   Future<UserEntity> signIn({required String email, required String password});
@@ -21,5 +22,5 @@ abstract class AuthRepository {
 
   Future<void> refreshSession();
 
-  Stream<UserEntity?> get authStateChanges;
+  Stream<AuthUserChange> get authStateChanges;
 }

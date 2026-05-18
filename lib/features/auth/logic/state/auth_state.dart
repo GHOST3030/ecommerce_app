@@ -1,10 +1,11 @@
-import '../entity/user_entity.dart';
+import 'package:ecommerce_app/features/auth/logic/entity/user_entity.dart';
 
 enum AuthStatus {
   initial,
   authenticated,
   unauthenticated,
   emailUnverified,
+  passwordRecovery,
 }
 
 class AuthState {
@@ -26,6 +27,7 @@ class AuthState {
   bool get isUnauthenticated => status == AuthStatus.unauthenticated;
   bool get isInitial => status == AuthStatus.initial;
   bool get requiresEmailVerification => status == AuthStatus.emailUnverified;
+  bool get isPasswordRecovery => status == AuthStatus.passwordRecovery;
 
   AuthState copyWith({
     AuthStatus? status,

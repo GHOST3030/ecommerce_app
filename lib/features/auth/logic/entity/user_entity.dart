@@ -2,7 +2,9 @@ class UserEntity {
   final String id;
   final String email;
   final String fullName;
+  final String phone;
   final String? avatarUrl;
+  final String role;
   final DateTime createdAt;
   final bool isEmailVerified;
 
@@ -10,7 +12,9 @@ class UserEntity {
     required this.id,
     required this.email,
     required this.fullName,
+    required this.phone,
     this.avatarUrl,
+    required this.role,
     required this.createdAt,
     required this.isEmailVerified,
   });
@@ -19,7 +23,9 @@ class UserEntity {
     String? id,
     String? email,
     String? fullName,
+    String? phone,
     String? avatarUrl,
+    String? role,
     DateTime? createdAt,
     bool? isEmailVerified,
   }) {
@@ -27,7 +33,9 @@ class UserEntity {
       id: id ?? this.id,
       email: email ?? this.email,
       fullName: fullName ?? this.fullName,
+      phone: phone ?? this.phone,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
     );

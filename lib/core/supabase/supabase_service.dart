@@ -8,6 +8,9 @@ class SupabaseService {
     await Supabase.initialize(
       url: AppConfig.supabaseUrl,
       anonKey: AppConfig.supabaseAnonKey,
+      authOptions: const FlutterAuthClientOptions(
+        detectSessionInUri: true,
+      ),
       debug: AppConfig.isDevelopment,
     );
   }
