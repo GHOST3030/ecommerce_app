@@ -31,8 +31,8 @@
   "email": "البريد الإلكتروني",
   "emailHint": "أدخل بريدك الإلكتروني",
   "password": "كلمة المرور",
-  "confirmPassword": "تأكيد كلمة المرور",
   "passwordHint": "أدخل كلمة المرور",
+  "confirmPassword": "تأكيد كلمة المرور",
   "forgotPassword": "نسيت كلمة المرور؟",
   "dontHaveAccount": "ليس لديك حساب؟",
   "register": "إنشاء حساب",
@@ -44,5 +44,19 @@
   "logout": "تسجيل الخروج",
   "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
   "invalidPassword": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-  "invalidName": "الاسم قصير جداً"
+  "invalidName": "الاسم قصير جداً",
+
+  "cart": "السلة",
+  "cartEmpty": "سلتك فارغة",
+  "cartEmptySubtitle": "لم تضف أي عناصر بعد",
+  "continueShopping": "متابعة التسوق",
+  "cartSubtotal": "المجموع الفرعي",
+  "cartTotal": "الإجمالي",
+  "checkout": "إتمام الشراء",
+  "removeItem": "إزالة",
+  "clearCart": "إفراغ السلة",
+  "clearCartConfirm": "إزالة جميع العناصر من سلتك؟",
+  "addToCart": "أضف إلى السلة",
+  "outOfStock": "نفذ المخزون",
+  "quantity": "الكمية"
 }

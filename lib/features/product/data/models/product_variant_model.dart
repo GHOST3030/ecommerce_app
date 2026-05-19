@@ -13,6 +13,9 @@ class ProductVariantModel {
     required this.isActive,
     required this.sortOrder,
     required this.createdAt,
+    this.productNameEn,
+    this.productNameAr,
+    this.productImages,
   });
 
   final String id;
@@ -29,57 +32,67 @@ class ProductVariantModel {
   final int sortOrder;
   final DateTime createdAt;
 
+  final String? productNameEn;
+  final String? productNameAr;
+  final List<String>? productImages;
+
   factory ProductVariantModel.fromJson(Map<String, dynamic> json) {
+    final productsJson = json['products'] as Map<String, dynamic>?;
     return ProductVariantModel(
-      id:            json['id']             as String,
-      productId:     json['product_id']     as String,
-      sku:           json['sku']            as String,
-      size:          json['size']           as String,
-      colorEn:       json['color_en']       as String,
-      colorAr:       json['color_ar']       as String,
-      colorHex:      json['color_hex']      as String,
-      price:        (json['price']          as num).toDouble(),
+      id: json['id'] as String,
+      productId: json['product_id'] as String,
+      sku: json['sku'] as String,
+      size: json['size'] as String,
+      colorEn: json['color_en'] as String,
+      colorAr: json['color_ar'] as String,
+      colorHex: json['color_hex'] as String,
+      price: (json['price'] as num).toDouble(),
       discountPrice: json['discount_price'] == null
           ? null
           : (json['discount_price'] as num).toDouble(),
-      stock:         json['stock']          as int,
-      isActive:      json['is_active']      as bool,
-      sortOrder:     json['sort_order']     as int,
-      createdAt:     DateTime.parse(json['created_at'] as String),
+      stock: json['stock'] as int,
+      isActive: json['is_active'] as bool,
+      sortOrder: json['sort_order'] as int,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      productNameEn: productsJson?['name_en'] as String?,
+      productNameAr: productsJson?['name_ar'] as String?,
+      productImages: (productsJson?['images'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id':             id,
-      'product_id':     productId,
-      'sku':            sku,
-      'size':           size,
-      'color_en':       colorEn,
-      'color_ar':       colorAr,
-      'color_hex':      colorHex,
-      'price':          price,
+      'id': id,
+      'product_id': productId,
+      'sku': sku,
+      'size': size,
+      'color_en': colorEn,
+      'color_ar': colorAr,
+      'color_hex': colorHex,
+      'price': price,
       'discount_price': discountPrice,
-      'stock':          stock,
-      'is_active':      isActive,
-      'sort_order':     sortOrder,
-      'created_at':     createdAt.toIso8601String(),
+      'stock': stock,
+      'is_active': isActive,
+      'sort_order': sortOrder,
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
   Map<String, dynamic> toInsertJson() {
     return {
-      'product_id':     productId,
-      'sku':            sku,
-      'size':           size,
-      'color_en':       colorEn,
-      'color_ar':       colorAr,
-      'color_hex':      colorHex,
-      'price':          price,
+      'product_id': productId,
+      'sku': sku,
+      'size': size,
+      'color_en': colorEn,
+      'color_ar': colorAr,
+      'color_hex': colorHex,
+      'price': price,
       'discount_price': discountPrice,
-      'stock':          stock,
-      'is_active':      isActive,
-      'sort_order':     sortOrder,
+      'stock': stock,
+      'is_active': isActive,
+      'sort_order': sortOrder,
     };
   }
 }

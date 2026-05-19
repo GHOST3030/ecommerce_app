@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:ecommerce_app/core/router/app_routes.dart';
+import 'package:ecommerce_app/core/supabase/supabase_service.dart';
 import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
 import 'package:ecommerce_app/features/auth/logic/state/auth_state.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/email_verification_page.dart';
@@ -8,114 +11,130 @@ import 'package:ecommerce_app/features/auth/ui/pages/login_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/register_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/reset_password_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/splash_page.dart';
+import 'package:ecommerce_app/features/cart/ui/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/product/ui/pages/product_detail_screen.dart';
+import 'package:ecommerce_app/features/product/ui/pages/product_list_screen.dart';
+import 'package:ecommerce_app/features/product/ui/pages/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final listenable = _AuthStateListenable(ref);
+  final authState = ref.watch(authNotifierProvider);
 
   return GoRouter(
-    navigatorKey: _rootNavigatorKey,
+    debugLogDiagnostics: true,
     initialLocation: AppRoutes.splash,
-    refreshListenable: listenable,
-    redirect: (context, state) {
-      final authState = ref.read(authNotifierProvider);
-      final location = state.matchedLocation;
-
-      final isInitial = authState.status == AuthStatus.initial;
-      final isAuthenticated = authState.isAuthenticated;
-      final isEmailUnverified = authState.requiresEmailVerification;
-      final isPasswordRecovery = authState.isPasswordRecovery;
-
-      final guestRoutes = [
-        AppRoutes.login,
-        AppRoutes.register,
-        AppRoutes.forgotPassword,
-      ];
-
-      if (location == AppRoutes.splash) {
-        if (isInitial) return null;
-        if (isPasswordRecovery) return AppRoutes.resetPassword;
-        if (isAuthenticated) return AppRoutes.home;
-        if (isEmailUnverified) return AppRoutes.emailVerification;
-        return AppRoutes.login;
-      }
-
-      if (isInitial) return AppRoutes.splash;
-
-      if (isPasswordRecovery && location != AppRoutes.resetPassword) {
-        return AppRoutes.resetPassword;
-      }
-
-      if (isAuthenticated &&
-          (guestRoutes.contains(location) ||
-              location == AppRoutes.resetPassword)) {
-        return AppRoutes.home;
-      }
-
-      if (isEmailUnverified && location != AppRoutes.emailVerification) {
-        return AppRoutes.emailVerification;
-      }
-
-      if (!isAuthenticated &&
-          !isEmailUnverified &&
-          !isPasswordRecovery &&
-          !guestRoutes.contains(location) &&
-          location != AppRoutes.splash) {
-        return AppRoutes.login;
-      }
-
-      return null;
-    },
+    refreshListenable:
+        GoRouterRefreshStream(SupabaseService.auth.onAuthStateChange),
     routes: [
       GoRoute(
         path: AppRoutes.splash,
+        name: 'splash',
         builder: (_, __) => const SplashPage(),
       ),
       GoRoute(
         path: AppRoutes.login,
+        name: 'login',
         builder: (_, __) => const LoginPage(),
       ),
       GoRoute(
         path: AppRoutes.register,
+        name: 'register',
         builder: (_, __) => const RegisterPage(),
       ),
       GoRoute(
         path: AppRoutes.forgotPassword,
+        name: 'forgot-password',
         builder: (_, __) => const ForgotPasswordPage(),
       ),
       GoRoute(
         path: AppRoutes.resetPassword,
+        name: 'reset-password',
         builder: (_, __) => const ResetPasswordPage(),
       ),
       GoRoute(
         path: AppRoutes.emailVerification,
+        name: 'email-verification',
         builder: (_, __) => const EmailVerificationPage(),
       ),
       GoRoute(
         path: AppRoutes.home,
+        name: 'home',
         builder: (_, __) => const HomePage(),
       ),
+      GoRoute(
+        path: AppRoutes.productList,
+        name: 'product-list',
+        builder: (_, __) => const ProductListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.productDetail,
+        name: 'product-detail',
+        builder: (_, state) =>
+            ProductDetailScreen(productId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: AppRoutes.search,
+        name: 'search',
+        builder: (_, __) => const SearchScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.cart,
+        name: 'cart',
+        builder: (_, __) => const CartScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.checkout,
+        name: 'checkout',
+        builder: (_, __) => const Scaffold(
+          body: Center(child: Text('Checkout')),
+        ),
+      ),
     ],
-    errorBuilder: (_, state) => Scaffold(
-      body: Center(child: Text('Route not found: ${state.error}')),
-    ),
+    redirect: (context, state) {
+      final location = state.matchedLocation;
+      final isSplash = location == AppRoutes.splash;
+      final isAuthRoute = location == AppRoutes.login ||
+          location == AppRoutes.register ||
+          location == AppRoutes.forgotPassword ||
+          location == AppRoutes.resetPassword;
+      final isVerificationRoute = location == AppRoutes.emailVerification;
+
+      if (authState.status == AuthStatus.initial || authState.isLoading) {
+        return isSplash ? null : AppRoutes.splash;
+      }
+
+      if (authState.status == AuthStatus.emailUnverified) {
+        return isVerificationRoute ? null : AppRoutes.emailVerification;
+      }
+
+      if (authState.status == AuthStatus.authenticated) {
+        if (isSplash || isAuthRoute || isVerificationRoute) {
+          return AppRoutes.home;
+        }
+        return null;
+      }
+
+      if (authState.status == AuthStatus.unauthenticated) {
+        return isAuthRoute ? null : AppRoutes.login;
+      }
+
+      return null;
+    },
   );
 });
 
-class _AuthStateListenable extends ChangeNotifier {
-  final Ref _ref;
-  AuthStatus? _lastStatus;
+class GoRouterRefreshStream extends ChangeNotifier {
+  late final StreamSubscription<dynamic> _sub;
 
-  _AuthStateListenable(this._ref) {
-    _ref.listen(authStatusProvider, (_, next) {
-      if (_lastStatus != next) {
-        _lastStatus = next;
-        notifyListeners();
-      }
-    });
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    _sub = stream.listen((_) => notifyListeners());
+  }
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
   }
 }

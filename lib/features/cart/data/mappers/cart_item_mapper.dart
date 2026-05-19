@@ -7,10 +7,10 @@ class CartItemMapper {
 
   static CartItemEntity toEntity(CartItemModel model) {
     return CartItemEntity(
-      id:        model.id,
-      userId:    model.userId,
+      id: model.id,
+      userId: model.userId,
       variantId: model.variantId,
-      quantity:  model.quantity,
+      quantity: model.quantity,
       createdAt: model.createdAt,
       variant: model.variant != null
           ? ProductVariantMapper.toEntity(model.variant!)
@@ -20,10 +20,10 @@ class CartItemMapper {
 
   static CartItemModel toModel(CartItemEntity entity) {
     return CartItemModel(
-      id:        entity.id,
-      userId:    entity.userId,
+      id: entity.id,
+      userId: entity.userId,
       variantId: entity.variantId,
-      quantity:  entity.quantity,
+      quantity: entity.quantity,
       createdAt: entity.createdAt,
     );
   }

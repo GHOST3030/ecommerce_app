@@ -31,8 +31,8 @@
   "email": "Email",
   "emailHint": "Enter your email",
   "password": "Password",
-  "confirmPassword": "Confirm Password",
   "passwordHint": "Enter your password",
+  "confirmPassword": "Confirm Password",
   "forgotPassword": "Forgot Password?",
   "dontHaveAccount": "Don't have an account?",
   "register": "Register",
@@ -44,5 +44,19 @@
   "logout": "Logout",
   "invalidEmail": "Please enter a valid email",
   "invalidPassword": "Password must be at least 6 characters",
-  "invalidName": "Name is too short"
+  "invalidName": "Name is too short",
+
+  "cart": "Cart",
+  "cartEmpty": "Your cart is empty",
+  "cartEmptySubtitle": "Looks like you haven't added anything yet",
+  "continueShopping": "Continue Shopping",
+  "cartSubtotal": "Subtotal",
+  "cartTotal": "Total",
+  "checkout": "Proceed to Checkout",
+  "removeItem": "Remove",
+  "clearCart": "Clear Cart",
+  "clearCartConfirm": "Remove all items from your cart?",
+  "addToCart": "Add to Cart",
+  "outOfStock": "Out of Stock",
+  "quantity": "Qty"
 }

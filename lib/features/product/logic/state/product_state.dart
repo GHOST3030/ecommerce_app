@@ -35,6 +35,9 @@ final class ProductState {
   bool get isSuccess => status == ProductStatus.success;
   bool get isFailure => status == ProductStatus.failure;
   bool get isEmpty => isSuccess && products.isEmpty;
+  bool get isSearchActive => searchQuery.isNotEmpty;
+  bool get isCategoryActive => selectedCategoryId != null;
+  bool get showFeatured => !isSearchActive && !isCategoryActive;
 
   ProductState copyWith({
     ProductStatus? status,
@@ -59,7 +62,8 @@ final class ProductState {
       searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
       hasMore: hasMore ?? this.hasMore,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      errorMessage:
+          clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 

@@ -9,38 +9,39 @@ class ProductNotifier extends StateNotifier<ProductState> {
   ProductNotifier(this._repository) : super(const ProductState.initial());
 
   final ProductRepository _repository;
-
   static const int _pageSize = 20;
 
   // ─── Public API ───────────────────────────────────────────────────────────
 
   Future<void> initialize() async {
     if (state.isLoading) return;
-    state = state.copyWith(status: ProductStatus.loading, clearError: true);
+    state = const ProductState.initial().copyWith(
+      status: ProductStatus.loading,
+    );
     await _reload();
   }
 
   Future<void> refresh() async {
     state = state.copyWith(
       status: ProductStatus.refreshing,
-      clearError: true,
       currentPage: 0,
       hasMore: true,
+      clearError: true,
     );
     await _reload();
   }
 
   Future<void> loadNextPage() async {
-    if (!state.hasMore || state.isLoadingMore) return;
+    if (!state.hasMore || state.isLoadingMore || state.isLoading) return;
     state = state.copyWith(status: ProductStatus.loadingMore);
 
     try {
-      final next = state.currentPage + 1;
-      final more = await _fetchCurrentPage(page: next);
+      final nextPage = state.currentPage + 1;
+      final more = await _fetchPage(page: nextPage);
       state = state.copyWith(
         status: ProductStatus.success,
         products: [...state.products, ...more],
-        currentPage: next,
+        currentPage: nextPage,
         hasMore: more.length >= _pageSize,
       );
     } on AppException catch (e) {
@@ -59,6 +60,7 @@ class ProductNotifier extends StateNotifier<ProductState> {
   Future<void> filterByCategory(String? categoryId) async {
     if (state.selectedCategoryId == categoryId) return;
 
+    // Reset to a clean state preserving categories + featured.
     state = ProductState(
       status: ProductStatus.loading,
       categories: state.categories,
@@ -67,7 +69,7 @@ class ProductNotifier extends StateNotifier<ProductState> {
     );
 
     try {
-      final products = await _fetchCurrentPage(page: 0);
+      final products = await _fetchPage(page: 0);
       state = state.copyWith(
         status: ProductStatus.success,
         products: products,
@@ -91,6 +93,7 @@ class ProductNotifier extends StateNotifier<ProductState> {
     final trimmed = query.trim();
     if (trimmed == state.searchQuery) return;
 
+    // Reset to a clean state preserving categories + featured.
     state = ProductState(
       status: ProductStatus.loading,
       categories: state.categories,
@@ -131,6 +134,7 @@ class ProductNotifier extends StateNotifier<ProductState> {
   // ─── Private ──────────────────────────────────────────────────────────────
 
   Future<void> _reload() async {
+    // Run categories, featured, and first page in parallel.
     await Future.wait([
       _loadCategories(),
       _loadFeaturedProducts(),
@@ -141,53 +145,61 @@ class ProductNotifier extends StateNotifier<ProductState> {
   Future<void> _loadCategories() async {
     try {
       final cats = await _repository.getCategories();
-      state = state.copyWith(categories: cats);
-    } catch (_) {}
+      if (mounted) state = state.copyWith(categories: cats);
+    } catch (_) {
+      // Non-critical — don't crash the main flow.
+    }
   }
 
   Future<void> _loadFeaturedProducts() async {
     try {
       final featured = await _repository.getFeaturedProducts();
-      state = state.copyWith(featuredProducts: featured);
-    } catch (_) {}
+      if (mounted) state = state.copyWith(featuredProducts: featured);
+    } catch (_) {
+      // Non-critical — don't crash the main flow.
+    }
   }
 
   Future<void> _loadFirstPage() async {
     try {
-      final products = await _fetchCurrentPage(page: 0);
-      state = state.copyWith(
-        status: ProductStatus.success,
-        products: products,
-        currentPage: 0,
-        hasMore: products.length >= _pageSize,
-      );
+      final products = await _fetchPage(page: 0);
+      if (mounted) {
+        state = state.copyWith(
+          status: ProductStatus.success,
+          products: products,
+          currentPage: 0,
+          hasMore: products.length >= _pageSize,
+        );
+      }
     } on AppException catch (e) {
-      state = state.copyWith(
-        status: ProductStatus.failure,
-        errorMessage: Failure.fromException(e).message,
-      );
+      if (mounted) {
+        state = state.copyWith(
+          status: ProductStatus.failure,
+          errorMessage: Failure.fromException(e).message,
+        );
+      }
     } catch (_) {
-      state = state.copyWith(
-        status: ProductStatus.failure,
-        errorMessage: const UnknownFailure().message,
-      );
+      if (mounted) {
+        state = state.copyWith(
+          status: ProductStatus.failure,
+          errorMessage: const UnknownFailure().message,
+        );
+      }
     }
   }
 
-  Future<List<ProductEntity>> _fetchCurrentPage({required int page}) {
-    final query = state.searchQuery;
-    final categoryId = state.selectedCategoryId;
-
-    if (query.isNotEmpty) {
-      return _repository.searchProducts(query, page: page, pageSize: _pageSize);
-    }
-    if (categoryId != null) {
-      return _repository.getProductsByCategory(
-        categoryId,
+  Future<List<ProductEntity>> _fetchPage({required int page}) {
+    if (state.searchQuery.isNotEmpty) {
+      return _repository.searchProducts(
+        state.searchQuery,
         page: page,
         pageSize: _pageSize,
       );
     }
-    return _repository.getProducts(page: page, pageSize: _pageSize);
+    return _repository.getProducts(
+      categoryId: state.selectedCategoryId,
+      page: page,
+      pageSize: _pageSize,
+    );
   }
 }
