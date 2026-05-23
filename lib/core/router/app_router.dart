@@ -12,6 +12,11 @@ import 'package:ecommerce_app/features/auth/ui/pages/register_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/reset_password_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/splash_page.dart';
 import 'package:ecommerce_app/features/cart/ui/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/order/logic/entities/order_entity.dart';
+import 'package:ecommerce_app/features/order/ui/screens/checkout_screen.dart';
+import 'package:ecommerce_app/features/order/ui/screens/order_confirmation_screen.dart';
+import 'package:ecommerce_app/features/order/ui/screens/order_detail_screen.dart';
+import 'package:ecommerce_app/features/order/ui/screens/orders_list_screen.dart';
 import 'package:ecommerce_app/features/product/ui/pages/product_detail_screen.dart';
 import 'package:ecommerce_app/features/product/ui/pages/product_list_screen.dart';
 import 'package:ecommerce_app/features/product/ui/pages/search_screen.dart';
@@ -87,8 +92,29 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.checkout,
         name: 'checkout',
-        builder: (_, __) => const Scaffold(
-          body: Center(child: Text('Checkout')),
+        builder: (_, __) => const CheckoutScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orders,
+        name: 'orders',
+        builder: (_, __) => const OrdersListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.orderDetail,
+        name: 'order-detail',
+        builder: (_, state) {
+          final order = state.extra;
+          return OrderDetailScreen(
+            orderId: state.pathParameters['id']!,
+            order: order is OrderEntity ? order : null,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.orderConfirmation,
+        name: 'order-confirmation',
+        builder: (_, state) => OrderConfirmationScreen(
+          orderId: state.uri.queryParameters['orderId'],
         ),
       ),
     ],
@@ -117,7 +143,9 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (authState.status == AuthStatus.unauthenticated) {
-        return isAuthRoute ? null : AppRoutes.login;
+        return location == AppRoutes.login
+            ? AppRoutes.register
+            : AppRoutes.login;
       }
 
       return null;

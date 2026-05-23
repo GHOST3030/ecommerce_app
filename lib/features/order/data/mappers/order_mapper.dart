@@ -6,10 +6,10 @@ class OrderMapper {
 
   static OrderItemEntity toItemEntity(OrderItemModel model) {
     return OrderItemEntity(
-      id:        model.id,
-      orderId:   model.orderId,
+      id: model.id,
+      orderId: model.orderId,
       variantId: model.variantId,
-      quantity:  model.quantity,
+      quantity: model.quantity,
       unitPrice: model.unitPrice,
       createdAt: model.createdAt,
     );
@@ -17,10 +17,10 @@ class OrderMapper {
 
   static OrderItemModel toItemModel(OrderItemEntity entity) {
     return OrderItemModel(
-      id:        entity.id,
-      orderId:   entity.orderId,
+      id: entity.id,
+      orderId: entity.orderId,
       variantId: entity.variantId,
-      quantity:  entity.quantity,
+      quantity: entity.quantity,
       unitPrice: entity.unitPrice,
       createdAt: entity.createdAt,
     );
@@ -28,27 +28,27 @@ class OrderMapper {
 
   static OrderEntity toEntity(OrderModel model) {
     return OrderEntity(
-      id:              model.id,
-      userId:          model.userId,
-      status:          OrderStatus.fromString(model.status),
-      totalAmount:     model.totalAmount,
+      id: model.id,
+      userId: model.userId,
+      status: OrderStatus.fromString(model.status),
+      totalAmount: model.totalAmount,
       shippingAddress: model.shippingAddress,
-      notes:           model.notes,
-      createdAt:       model.createdAt,
-      items:           model.items.map(toItemEntity).toList(),
+      notes: model.notes,
+      createdAt: model.createdAt,
+      items: model.items.map(toItemEntity).toList(),
     );
   }
 
   static OrderModel toModel(OrderEntity entity) {
     return OrderModel(
-      id:              entity.id,
-      userId:          entity.userId,
-      status:          entity.status.toDbString(),
-      totalAmount:     entity.totalAmount,
+      id: entity.id,
+      userId: entity.userId,
+      status: entity.status.toDbString(),
+      totalAmount: entity.totalAmount,
       shippingAddress: entity.shippingAddress,
-      notes:           entity.notes,
-      createdAt:       entity.createdAt,
-      items:           entity.items.map(toItemModel).toList(),
+      notes: entity.notes,
+      createdAt: entity.createdAt,
+      items: entity.items.map(toItemModel).toList(),
     );
   }
 

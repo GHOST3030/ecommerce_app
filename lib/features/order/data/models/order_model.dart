@@ -17,28 +17,28 @@ class OrderItemModel {
 
   factory OrderItemModel.fromJson(Map<String, dynamic> json) {
     return OrderItemModel(
-      id:        json['id']         as String,
-      orderId:   json['order_id']   as String,
+      id: json['id'] as String,
+      orderId: json['order_id'] as String,
       variantId: json['variant_id'] as String,
-      quantity:  json['quantity']   as int,
+      quantity: json['quantity'] as int,
       unitPrice: (json['unit_price'] as num).toDouble(),
       createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id':         id,
-        'order_id':   orderId,
+        'id': id,
+        'order_id': orderId,
         'variant_id': variantId,
-        'quantity':   quantity,
+        'quantity': quantity,
         'unit_price': unitPrice,
         'created_at': createdAt.toIso8601String(),
       };
 
   Map<String, dynamic> toInsertJson() => {
-        'order_id':   orderId,
+        'order_id': orderId,
         'variant_id': variantId,
-        'quantity':   quantity,
+        'quantity': quantity,
         'unit_price': unitPrice,
       };
 }
@@ -67,13 +67,14 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     final rawItems = json['order_items'] as List<dynamic>? ?? [];
     return OrderModel(
-      id:              json['id']               as String,
-      userId:          json['user_id']          as String,
-      status:          json['status']           as String,
-      totalAmount:    (json['total_amount']      as num).toDouble(),
-      shippingAddress: (json['shipping_address'] as Map<String, dynamic>?) ?? {},
-      notes:           json['notes']            as String? ?? '',
-      createdAt:       DateTime.parse(json['created_at'] as String),
+      id: json['id'] as String,
+      userId: json['user_id'] as String,
+      status: json['status'] as String,
+      totalAmount: (json['total_amount'] as num).toDouble(),
+      shippingAddress:
+          (json['shipping_address'] as Map<String, dynamic>?) ?? {},
+      notes: json['notes'] as String? ?? '',
+      createdAt: DateTime.parse(json['created_at'] as String),
       items: rawItems
           .map((e) => OrderItemModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -81,19 +82,19 @@ class OrderModel {
   }
 
   Map<String, dynamic> toJson() => {
-        'id':               id,
-        'user_id':          userId,
-        'status':           status,
-        'total_amount':     totalAmount,
+        'id': id,
+        'user_id': userId,
+        'status': status,
+        'total_amount': totalAmount,
         'shipping_address': shippingAddress,
-        'notes':            notes,
-        'created_at':       createdAt.toIso8601String(),
+        'notes': notes,
+        'created_at': createdAt.toIso8601String(),
       };
 
   Map<String, dynamic> toInsertJson() => {
-        'user_id':          userId,
-        'total_amount':     totalAmount,
+        'user_id': userId,
+        'total_amount': totalAmount,
         'shipping_address': shippingAddress,
-        'notes':            notes,
+        'notes': notes,
       };
 }

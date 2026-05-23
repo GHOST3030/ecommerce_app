@@ -11,4 +11,14 @@ abstract class AppRoutes {
   static const search = '/search';
   static const cart = '/cart';
   static const checkout = '/checkout';
+  static const orders = '/orders';
+  static const orderDetail = '/orders/:id';
+  static const orderConfirmation = '/order-confirmation';
+
+  static String orderDetailPath(String id) => '/orders/$id';
+
+  static String orderConfirmationPath({String? orderId}) {
+    if (orderId == null || orderId.isEmpty) return orderConfirmation;
+    return '$orderConfirmation?orderId=$orderId';
+  }
 }

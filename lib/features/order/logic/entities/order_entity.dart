@@ -9,14 +9,14 @@ enum OrderStatus {
 
   static OrderStatus fromString(String value) {
     return switch (value) {
-      'pending'    => OrderStatus.pending,
-      'confirmed'  => OrderStatus.confirmed,
+      'pending' => OrderStatus.pending,
+      'confirmed' => OrderStatus.confirmed,
       'processing' => OrderStatus.processing,
-      'shipped'    => OrderStatus.shipped,
-      'delivered'  => OrderStatus.delivered,
-      'cancelled'  => OrderStatus.cancelled,
-      'refunded'   => OrderStatus.refunded,
-      _            => throw ArgumentError('Unknown order status: $value'),
+      'shipped' => OrderStatus.shipped,
+      'delivered' => OrderStatus.delivered,
+      'cancelled' => OrderStatus.cancelled,
+      'refunded' => OrderStatus.refunded,
+      _ => throw ArgumentError('Unknown order status: $value'),
     };
   }
 
@@ -28,13 +28,10 @@ enum OrderStatus {
       this == processing ||
       this == shipped;
 
-  bool get isCancellable =>
-      this == pending || this == confirmed;
+  bool get isCancellable => this == pending || this == confirmed;
 
   bool get isTerminal =>
-      this == delivered ||
-      this == cancelled ||
-      this == refunded;
+      this == delivered || this == cancelled || this == refunded;
 }
 
 class OrderItemEntity {
@@ -95,14 +92,14 @@ class OrderEntity {
     List<OrderItemEntity>? items,
   }) {
     return OrderEntity(
-      id:              id,
-      userId:          userId,
-      status:          status ?? this.status,
-      totalAmount:     totalAmount,
+      id: id,
+      userId: userId,
+      status: status ?? this.status,
+      totalAmount: totalAmount,
       shippingAddress: shippingAddress,
-      notes:           notes,
-      createdAt:       createdAt,
-      items:           items  ?? this.items,
+      notes: notes,
+      createdAt: createdAt,
+      items: items ?? this.items,
     );
   }
 
