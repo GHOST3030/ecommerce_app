@@ -12,6 +12,7 @@ import 'package:ecommerce_app/features/auth/ui/pages/register_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/reset_password_page.dart';
 import 'package:ecommerce_app/features/auth/ui/pages/splash_page.dart';
 import 'package:ecommerce_app/features/cart/ui/screens/cart_screen.dart';
+import 'package:ecommerce_app/features/notifications/ui/screens/notifications_screen.dart';
 import 'package:ecommerce_app/features/order/logic/entities/order_entity.dart';
 import 'package:ecommerce_app/features/order/ui/screens/checkout_screen.dart';
 import 'package:ecommerce_app/features/order/ui/screens/order_confirmation_screen.dart';
@@ -94,6 +95,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.wishlist,
         name: 'wishlist',
         builder: (_, __) => const WishlistScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        builder: (_, __) => const NotificationsScreen(),
       ),
       GoRoute(
         path: AppRoutes.checkout,

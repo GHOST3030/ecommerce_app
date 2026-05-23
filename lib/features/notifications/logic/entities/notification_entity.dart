@@ -9,29 +9,29 @@ enum NotificationType {
   static NotificationType fromString(String value) {
     return switch (value) {
       'order_confirmed' => NotificationType.orderConfirmed,
-      'order_shipped'   => NotificationType.orderShipped,
+      'order_shipped' => NotificationType.orderShipped,
       'order_delivered' => NotificationType.orderDelivered,
       'order_cancelled' => NotificationType.orderCancelled,
-      'promo'           => NotificationType.promo,
-      'general'         => NotificationType.general,
-      _                 => throw ArgumentError('Unknown notification type: $value'),
+      'promo' => NotificationType.promo,
+      'general' => NotificationType.general,
+      _ => throw ArgumentError('Unknown notification type: $value'),
     };
   }
 
   String toDbString() {
     return switch (this) {
       NotificationType.orderConfirmed => 'order_confirmed',
-      NotificationType.orderShipped   => 'order_shipped',
+      NotificationType.orderShipped => 'order_shipped',
       NotificationType.orderDelivered => 'order_delivered',
       NotificationType.orderCancelled => 'order_cancelled',
-      NotificationType.promo          => 'promo',
-      NotificationType.general        => 'general',
+      NotificationType.promo => 'promo',
+      NotificationType.general => 'general',
     };
   }
 
   bool get isOrderRelated =>
       this == orderConfirmed ||
-      this == orderShipped   ||
+      this == orderShipped ||
       this == orderDelivered ||
       this == orderCancelled;
 }
@@ -59,14 +59,14 @@ class NotificationEntity {
 
   NotificationEntity copyWith({bool? isRead}) {
     return NotificationEntity(
-      id:        id,
-      userId:    userId,
-      title:     title,
-      body:      body,
-      type:      type,
-      isRead:    isRead ?? this.isRead,
+      id: id,
+      userId: userId,
+      title: title,
+      body: body,
+      type: type,
+      isRead: isRead ?? this.isRead,
       createdAt: createdAt,
-      orderId:   orderId,
+      orderId: orderId,
     );
   }
 

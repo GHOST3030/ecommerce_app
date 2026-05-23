@@ -6,27 +6,27 @@ class NotificationMapper {
 
   static NotificationEntity toEntity(NotificationModel model) {
     return NotificationEntity(
-      id:        model.id,
-      userId:    model.userId,
-      title:     model.title,
-      body:      model.body,
-      type:      NotificationType.fromString(model.type),
-      isRead:    model.isRead,
+      id: model.id,
+      userId: model.userId,
+      title: model.title,
+      body: model.body,
+      type: NotificationType.fromString(model.type),
+      isRead: model.isRead,
       createdAt: model.createdAt,
-      orderId:   model.orderId,
+      orderId: model.orderId,
     );
   }
 
   static NotificationModel toModel(NotificationEntity entity) {
     return NotificationModel(
-      id:        entity.id,
-      userId:    entity.userId,
-      title:     entity.title,
-      body:      entity.body,
-      type:      entity.type.toDbString(),
-      isRead:    entity.isRead,
+      id: entity.id,
+      userId: entity.userId,
+      title: entity.title,
+      body: entity.body,
+      type: entity.type.toDbString(),
+      isRead: entity.isRead,
       createdAt: entity.createdAt,
-      orderId:   entity.orderId,
+      orderId: entity.orderId,
     );
   }
 

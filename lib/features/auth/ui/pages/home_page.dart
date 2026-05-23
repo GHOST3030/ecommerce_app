@@ -4,6 +4,8 @@ import 'package:ecommerce_app/core/theme/app_colors.dart';
 import 'package:ecommerce_app/core/theme/app_spacing.dart';
 import 'package:ecommerce_app/core/theme/app_typography.dart';
 import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
+import 'package:ecommerce_app/features/notifications/logic/providers/notification_provider.dart';
+import 'package:ecommerce_app/features/notifications/logic/states/notification_state.dart';
 import 'package:ecommerce_app/features/product/logic/entities/category_entity.dart';
 import 'package:ecommerce_app/features/product/logic/entities/product_entity.dart';
 import 'package:ecommerce_app/features/product/logic/providers/product_providers.dart';
@@ -33,6 +35,9 @@ class _HomePageState extends ConsumerState<HomePage> {
       if (ref.read(wishlistStatusProvider) == WishlistStatus.initial) {
         ref.read(wishlistNotifierProvider.notifier).load();
       }
+      if (ref.read(notificationStatusProvider) == NotificationStatus.initial) {
+        ref.read(notificationNotifierProvider.notifier).load();
+      }
     });
   }
 
@@ -45,6 +50,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final error = ref.watch(productErrorProvider);
     final user = ref.watch(currentUserProvider);
     final wishlistedIds = ref.watch(wishlistProductIdsProvider);
+    final unreadNotifications = ref.watch(notificationUnreadCountProvider);
     final langCode = context.isRtl ? 'ar' : 'en';
 
     return Scaffold(
@@ -61,6 +67,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             tooltip: context.l10n.cart,
             icon: const Icon(Icons.shopping_bag_outlined),
             onPressed: () => context.push(AppRoutes.cart),
+          ),
+          IconButton(
+            tooltip: context.isRtl ? 'الإشعارات' : 'Notifications',
+            icon: _NotificationBell(count: unreadNotifications),
+            onPressed: () => context.push(AppRoutes.notifications),
           ),
           IconButton(
             tooltip: context.isRtl ? 'المفضلة' : 'Wishlist',
@@ -191,6 +202,47 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   void _toggleWishlist(ProductEntity product) {
     ref.read(wishlistNotifierProvider.notifier).toggleProduct(product.id);
+  }
+}
+
+class _NotificationBell extends StatelessWidget {
+  const _NotificationBell({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        const Icon(Icons.notifications_none_rounded),
+        if (count > 0)
+          PositionedDirectional(
+            top: -7,
+            end: -8,
+            child: DecoratedBox(
+              decoration: const BoxDecoration(
+                color: AppColors.secondary,
+                shape: BoxShape.circle,
+              ),
+              child: SizedBox(
+                width: 18,
+                height: 18,
+                child: Center(
+                  child: Text(
+                    count > 9 ? '9+' : count.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
   }
 }
 
