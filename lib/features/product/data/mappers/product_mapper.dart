@@ -6,37 +6,37 @@ class ProductMapper {
 
   static ProductEntity toEntity(ProductModel model) {
     return ProductEntity(
-      id:            model.id,
-      categoryId:    model.categoryId,
-      nameEn:        model.nameEn,
-      nameAr:        model.nameAr,
+      id: model.id,
+      categoryId: model.categoryId,
+      nameEn: model.nameEn,
+      nameAr: model.nameAr,
       descriptionEn: model.descriptionEn,
       descriptionAr: model.descriptionAr,
-      basePrice:     model.basePrice,
+      basePrice: model.basePrice,
       discountPrice: model.discountPrice,
-      images:        model.images,
-      isActive:      model.isActive,
-      isFeatured:    model.isFeatured,
-      sortOrder:     model.sortOrder,
-      createdAt:     model.createdAt,
+      images: model.images,
+      isActive: model.isActive,
+      isFeatured: model.isFeatured,
+      sortOrder: model.sortOrder,
+      createdAt: model.createdAt,
     );
   }
 
   static ProductModel toModel(ProductEntity entity) {
     return ProductModel(
-      id:            entity.id,
-      categoryId:    entity.categoryId,
-      nameEn:        entity.nameEn,
-      nameAr:        entity.nameAr,
+      id: entity.id,
+      categoryId: entity.categoryId,
+      nameEn: entity.nameEn,
+      nameAr: entity.nameAr,
       descriptionEn: entity.descriptionEn,
       descriptionAr: entity.descriptionAr,
-      basePrice:     entity.basePrice,
+      basePrice: entity.basePrice,
       discountPrice: entity.discountPrice,
-      images:        entity.images,
-      isActive:      entity.isActive,
-      isFeatured:    entity.isFeatured,
-      sortOrder:     entity.sortOrder,
-      createdAt:     entity.createdAt,
+      images: entity.images,
+      isActive: entity.isActive,
+      isFeatured: entity.isFeatured,
+      sortOrder: entity.sortOrder,
+      createdAt: entity.createdAt,
     );
   }
 

@@ -30,8 +30,7 @@ class CategorySelector extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
         itemCount: categories.length + 1, // +1 for "All"
-        separatorBuilder: (_, __) =>
-            const SizedBox(width: AppSpacing.sm),
+        separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.sm),
         itemBuilder: (context, index) {
           if (index == 0) {
             return _CategoryChip(
@@ -119,8 +118,7 @@ class _CategoryChip extends StatelessWidget {
                     : isDark
                         ? AppColors.textPrimaryDark
                         : AppColors.textPrimaryLight,
-                fontWeight:
-                    isSelected ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
             ),
           ],

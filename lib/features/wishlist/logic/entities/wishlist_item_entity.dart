@@ -17,11 +17,11 @@ class WishlistItemEntity {
 
   WishlistItemEntity copyWith({ProductEntity? product}) {
     return WishlistItemEntity(
-      id:        id,
-      userId:    userId,
+      id: id,
+      userId: userId,
       productId: productId,
       createdAt: createdAt,
-      product:   product ?? this.product,
+      product: product ?? this.product,
     );
   }
 
@@ -36,6 +36,5 @@ class WishlistItemEntity {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() =>
-      'WishlistItemEntity(id: $id, productId: $productId)';
+  String toString() => 'WishlistItemEntity(id: $id, productId: $productId)';
 }

@@ -1,7 +1,14 @@
 import 'package:ecommerce_app/features/product/logic/entities/category_entity.dart';
 import 'package:ecommerce_app/features/product/logic/entities/product_entity.dart';
 
-enum ProductStatus { initial, loading, refreshing, loadingMore, success, failure }
+enum ProductStatus {
+  initial,
+  loading,
+  refreshing,
+  loadingMore,
+  success,
+  failure
+}
 
 final class ProductState {
   const ProductState({
@@ -57,13 +64,13 @@ final class ProductState {
       products: products ?? this.products,
       featuredProducts: featuredProducts ?? this.featuredProducts,
       categories: categories ?? this.categories,
-      selectedCategoryId:
-          clearCategory ? null : (selectedCategoryId ?? this.selectedCategoryId),
+      selectedCategoryId: clearCategory
+          ? null
+          : (selectedCategoryId ?? this.selectedCategoryId),
       searchQuery: searchQuery ?? this.searchQuery,
       currentPage: currentPage ?? this.currentPage,
       hasMore: hasMore ?? this.hasMore,
-      errorMessage:
-          clearError ? null : (errorMessage ?? this.errorMessage),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 

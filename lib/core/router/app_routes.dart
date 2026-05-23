@@ -10,6 +10,7 @@ abstract class AppRoutes {
   static const productDetail = '/product/:id';
   static const search = '/search';
   static const cart = '/cart';
+  static const wishlist = '/wishlist';
   static const checkout = '/checkout';
   static const orders = '/orders';
   static const orderDetail = '/orders/:id';

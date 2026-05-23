@@ -31,13 +31,13 @@ class ProductModel {
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id:            json['id']             as String,
-      categoryId:    json['category_id']    as String,
-      nameEn:        json['name_en']        as String,
-      nameAr:        json['name_ar']        as String,
+      id: json['id'] as String,
+      categoryId: json['category_id'] as String,
+      nameEn: json['name_en'] as String,
+      nameAr: json['name_ar'] as String,
       descriptionEn: json['description_en'] as String,
       descriptionAr: json['description_ar'] as String,
-      basePrice:    (json['base_price']     as num).toDouble(),
+      basePrice: (json['base_price'] as num).toDouble(),
       discountPrice: json['discount_price'] == null
           ? null
           : (json['discount_price'] as num).toDouble(),
@@ -45,44 +45,44 @@ class ProductModel {
               ?.map((e) => e as String)
               .toList() ??
           [],
-      isActive:   json['is_active']   as bool,
+      isActive: json['is_active'] as bool,
       isFeatured: json['is_featured'] as bool,
-      sortOrder:  json['sort_order']  as int,
-      createdAt:  DateTime.parse(json['created_at'] as String),
+      sortOrder: json['sort_order'] as int,
+      createdAt: DateTime.parse(json['created_at'] as String),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id':             id,
-      'category_id':    categoryId,
-      'name_en':        nameEn,
-      'name_ar':        nameAr,
+      'id': id,
+      'category_id': categoryId,
+      'name_en': nameEn,
+      'name_ar': nameAr,
       'description_en': descriptionEn,
       'description_ar': descriptionAr,
-      'base_price':     basePrice,
+      'base_price': basePrice,
       'discount_price': discountPrice,
-      'images':         images,
-      'is_active':      isActive,
-      'is_featured':    isFeatured,
-      'sort_order':     sortOrder,
-      'created_at':     createdAt.toIso8601String(),
+      'images': images,
+      'is_active': isActive,
+      'is_featured': isFeatured,
+      'sort_order': sortOrder,
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
   Map<String, dynamic> toInsertJson() {
     return {
-      'category_id':    categoryId,
-      'name_en':        nameEn,
-      'name_ar':        nameAr,
+      'category_id': categoryId,
+      'name_en': nameEn,
+      'name_ar': nameAr,
       'description_en': descriptionEn,
       'description_ar': descriptionAr,
-      'base_price':     basePrice,
+      'base_price': basePrice,
       'discount_price': discountPrice,
-      'images':         images,
-      'is_active':      isActive,
-      'is_featured':    isFeatured,
-      'sort_order':     sortOrder,
+      'images': images,
+      'is_active': isActive,
+      'is_featured': isFeatured,
+      'sort_order': sortOrder,
     };
   }
 }

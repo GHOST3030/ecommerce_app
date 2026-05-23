@@ -6,13 +6,13 @@ class CategoryMapper {
 
   static CategoryEntity toEntity(CategoryModel model) {
     return CategoryEntity(
-      id:        model.id,
-      nameEn:    model.nameEn,
-      nameAr:    model.nameAr,
-      slug:      model.slug,
-      imageUrl:  model.imageUrl,
-      parentId:  model.parentId,
-      isActive:  model.isActive,
+      id: model.id,
+      nameEn: model.nameEn,
+      nameAr: model.nameAr,
+      slug: model.slug,
+      imageUrl: model.imageUrl,
+      parentId: model.parentId,
+      isActive: model.isActive,
       sortOrder: model.sortOrder,
       createdAt: model.createdAt,
     );
@@ -20,13 +20,13 @@ class CategoryMapper {
 
   static CategoryModel toModel(CategoryEntity entity) {
     return CategoryModel(
-      id:        entity.id,
-      nameEn:    entity.nameEn,
-      nameAr:    entity.nameAr,
-      slug:      entity.slug,
-      imageUrl:  entity.imageUrl,
-      parentId:  entity.parentId,
-      isActive:  entity.isActive,
+      id: entity.id,
+      nameEn: entity.nameEn,
+      nameAr: entity.nameAr,
+      slug: entity.slug,
+      imageUrl: entity.imageUrl,
+      parentId: entity.parentId,
+      isActive: entity.isActive,
       sortOrder: entity.sortOrder,
       createdAt: entity.createdAt,
     );

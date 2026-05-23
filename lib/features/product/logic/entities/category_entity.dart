@@ -35,13 +35,13 @@ class CategoryEntity {
     int? sortOrder,
   }) {
     return CategoryEntity(
-      id:        id,
-      nameEn:    nameEn    ?? this.nameEn,
-      nameAr:    nameAr    ?? this.nameAr,
-      slug:      slug      ?? this.slug,
-      imageUrl:  imageUrl  ?? this.imageUrl,
-      parentId:  parentId,
-      isActive:  isActive  ?? this.isActive,
+      id: id,
+      nameEn: nameEn ?? this.nameEn,
+      nameAr: nameAr ?? this.nameAr,
+      slug: slug ?? this.slug,
+      imageUrl: imageUrl ?? this.imageUrl,
+      parentId: parentId,
+      isActive: isActive ?? this.isActive,
       sortOrder: sortOrder ?? this.sortOrder,
       createdAt: createdAt,
     );

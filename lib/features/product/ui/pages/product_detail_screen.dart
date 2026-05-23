@@ -4,11 +4,14 @@ import 'package:ecommerce_app/core/theme/app_spacing.dart';
 import 'package:ecommerce_app/core/theme/app_typography.dart';
 import 'package:ecommerce_app/core/widgets/app_error_widget.dart';
 import 'package:ecommerce_app/core/widgets/app_loading.dart';
+import 'package:ecommerce_app/features/product/logic/entities/product_entity.dart';
 import 'package:ecommerce_app/features/product/logic/providers/product_providers.dart';
 import 'package:ecommerce_app/features/product/logic/state/product_detail_state.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/image_carousel.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/price_display.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/variant_selector.dart';
+import 'package:ecommerce_app/features/wishlist/logic/providers/wishlist_provider.dart';
+import 'package:ecommerce_app/features/wishlist/logic/states/wishlist_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -55,6 +58,12 @@ class _DetailBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final langCode = context.isRtl ? 'ar' : 'en';
     final product = state.product!;
+
+    if (ref.read(wishlistStatusProvider) == WishlistStatus.initial) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(wishlistNotifierProvider.notifier).load();
+      });
+    }
 
     return Stack(
       children: [
@@ -185,14 +194,17 @@ class _DetailBody extends ConsumerWidget {
 
 // ── App bar with transparent-to-white scroll effect ───────────────────────────
 
-class _DetailAppBar extends StatelessWidget {
+class _DetailAppBar extends ConsumerWidget {
   const _DetailAppBar({required this.product, required this.langCode});
 
-  final product;
+  final ProductEntity product;
   final String langCode;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final wishlistedIds = ref.watch(wishlistProductIdsProvider);
+    final isWishlisted = wishlistedIds.contains(product.id);
+
     return SliverAppBar(
       pinned: true,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -205,6 +217,17 @@ class _DetailAppBar extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       actions: [
+        IconButton(
+          icon: Icon(
+            isWishlisted
+                ? Icons.favorite_rounded
+                : Icons.favorite_border_rounded,
+          ),
+          color: isWishlisted ? AppColors.secondary : null,
+          onPressed: () => ref
+              .read(wishlistNotifierProvider.notifier)
+              .toggleProduct(product.id),
+        ),
         IconButton(
           icon: const Icon(Icons.share_outlined),
           onPressed: () {},

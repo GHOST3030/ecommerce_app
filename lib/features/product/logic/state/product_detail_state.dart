@@ -98,8 +98,7 @@ final class ProductDetailState {
       variants: variants ?? this.variants,
       selectedColorHex: selectedColorHex ?? this.selectedColorHex,
       selectedSize: clearSize ? null : (selectedSize ?? this.selectedSize),
-      errorMessage:
-          clearError ? null : (errorMessage ?? this.errorMessage),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 }

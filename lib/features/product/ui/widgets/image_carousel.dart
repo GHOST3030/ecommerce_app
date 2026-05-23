@@ -70,8 +70,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.black45,
-                  borderRadius:
-                      BorderRadius.circular(AppSpacing.radiusFull),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
                 ),
                 child: Text(
                   '${_current + 1} / ${_images.length}',

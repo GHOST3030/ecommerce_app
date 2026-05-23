@@ -9,6 +9,8 @@ import 'package:ecommerce_app/features/product/logic/entities/product_entity.dar
 import 'package:ecommerce_app/features/product/logic/providers/product_providers.dart';
 import 'package:ecommerce_app/features/product/logic/state/product_state.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/product_card.dart';
+import 'package:ecommerce_app/features/wishlist/logic/providers/wishlist_provider.dart';
+import 'package:ecommerce_app/features/wishlist/logic/states/wishlist_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +30,9 @@ class _HomePageState extends ConsumerState<HomePage> {
       if (ref.read(productStatusProvider) == ProductStatus.initial) {
         ref.read(productNotifierProvider.notifier).initialize();
       }
+      if (ref.read(wishlistStatusProvider) == WishlistStatus.initial) {
+        ref.read(wishlistNotifierProvider.notifier).load();
+      }
     });
   }
 
@@ -39,6 +44,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final categories = ref.watch(categoriesProvider);
     final error = ref.watch(productErrorProvider);
     final user = ref.watch(currentUserProvider);
+    final wishlistedIds = ref.watch(wishlistProductIdsProvider);
     final langCode = context.isRtl ? 'ar' : 'en';
 
     return Scaffold(
@@ -55,6 +61,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             tooltip: context.l10n.cart,
             icon: const Icon(Icons.shopping_bag_outlined),
             onPressed: () => context.push(AppRoutes.cart),
+          ),
+          IconButton(
+            tooltip: context.isRtl ? 'المفضلة' : 'Wishlist',
+            icon: const Icon(Icons.favorite_border_rounded),
+            onPressed: () => context.push(AppRoutes.wishlist),
           ),
           PopupMenuButton<_HomeMenuAction>(
             tooltip: context.l10n.appName,
@@ -118,6 +129,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     title: context.isRtl ? 'مختارات مميزة' : 'Featured',
                     products: featured,
                     languageCode: langCode,
+                    wishlistedIds: wishlistedIds,
+                    onWishlistTap: _toggleWishlist,
                   ),
                 ),
               SliverPadding(
@@ -159,6 +172,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                               product: product,
                               languageCode: langCode,
                               onTap: () => ctx.push('/product/${product.id}'),
+                              isWishlisted: wishlistedIds.contains(product.id),
+                              onWishlistTap: () => _toggleWishlist(product),
                             );
                           },
                           childCount: products.length > 6 ? 6 : products.length,
@@ -172,6 +187,10 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ),
     );
+  }
+
+  void _toggleWishlist(ProductEntity product) {
+    ref.read(wishlistNotifierProvider.notifier).toggleProduct(product.id);
   }
 }
 
@@ -324,11 +343,15 @@ class _ProductRail extends StatelessWidget {
     required this.title,
     required this.products,
     required this.languageCode,
+    required this.wishlistedIds,
+    required this.onWishlistTap,
   });
 
   final String title;
   final List<ProductEntity> products;
   final String languageCode;
+  final Set<String> wishlistedIds;
+  final ValueChanged<ProductEntity> onWishlistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -363,6 +386,8 @@ class _ProductRail extends StatelessWidget {
                     product: product,
                     languageCode: languageCode,
                     onTap: () => context.push('/product/${product.id}'),
+                    isWishlisted: wishlistedIds.contains(product.id),
+                    onWishlistTap: () => onWishlistTap(product),
                   ),
                 );
               },

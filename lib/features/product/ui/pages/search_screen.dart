@@ -4,9 +4,12 @@ import 'package:ecommerce_app/core/extensions/context_extension.dart';
 import 'package:ecommerce_app/core/theme/app_colors.dart';
 import 'package:ecommerce_app/core/theme/app_spacing.dart';
 import 'package:ecommerce_app/core/theme/app_typography.dart';
+import 'package:ecommerce_app/features/product/logic/entities/product_entity.dart';
 import 'package:ecommerce_app/features/product/logic/providers/product_providers.dart';
 import 'package:ecommerce_app/features/product/logic/state/product_state.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/product_card.dart';
+import 'package:ecommerce_app/features/wishlist/logic/providers/wishlist_provider.dart';
+import 'package:ecommerce_app/features/wishlist/logic/states/wishlist_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +30,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     super.initState();
     // Pre-populate with any existing query.
     _controller.text = ref.read(productSearchQueryProvider);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(wishlistStatusProvider) == WishlistStatus.initial) {
+        ref.read(wishlistNotifierProvider.notifier).load();
+      }
+    });
   }
 
   @override
@@ -54,6 +62,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final query = ref.watch(productSearchQueryProvider);
     final hasMore = ref.watch(productHasMoreProvider);
     final isLoadingMore = ref.watch(productIsLoadingMoreProvider);
+    final wishlistedIds = ref.watch(wishlistProductIdsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -64,9 +73,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           textInputAction: TextInputAction.search,
           style: AppTypography.bodyLarge,
           decoration: InputDecoration(
-            hintText: _langCode == 'ar'
-                ? 'ابحث عن منتجات...'
-                : 'Search products...',
+            hintText:
+                _langCode == 'ar' ? 'ابحث عن منتجات...' : 'Search products...',
             border: InputBorder.none,
             enabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
@@ -92,16 +100,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         query: query,
         hasMore: hasMore,
         isLoadingMore: isLoadingMore,
+        wishlistedIds: wishlistedIds,
       ),
     );
   }
 
   Widget _buildContent({
     required ProductStatus status,
-    required products,
+    required List<ProductEntity> products,
     required String query,
     required bool hasMore,
     required bool isLoadingMore,
+    required Set<String> wishlistedIds,
   }) {
     // Idle: no query entered.
     if (query.isEmpty) {
@@ -126,8 +136,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         SliverPadding(
           padding: const EdgeInsets.all(AppSpacing.md),
           sliver: SliverGrid(
-            gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: AppSpacing.md,
               crossAxisSpacing: AppSpacing.md,
@@ -138,6 +147,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 product: products[i],
                 onTap: () => ctx.push('/product/${products[i].id}'),
                 languageCode: _langCode,
+                isWishlisted: wishlistedIds.contains(products[i].id),
+                onWishlistTap: () => ref
+                    .read(wishlistNotifierProvider.notifier)
+                    .toggleProduct(products[i].id),
               ),
               childCount: products.length,
             ),
@@ -173,9 +186,7 @@ class _IdleHint extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            langCode == 'ar'
-                ? 'ابدأ الكتابة للبحث'
-                : 'Start typing to search',
+            langCode == 'ar' ? 'ابدأ الكتابة للبحث' : 'Start typing to search',
             style: AppTypography.bodyLarge.copyWith(
               color: AppColors.textSecondaryLight,
             ),

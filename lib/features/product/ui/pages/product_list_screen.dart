@@ -9,6 +9,8 @@ import 'package:ecommerce_app/features/product/logic/state/product_state.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/category_selector.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/featured_products_row.dart';
 import 'package:ecommerce_app/features/product/ui/widgets/product_card.dart';
+import 'package:ecommerce_app/features/wishlist/logic/providers/wishlist_provider.dart';
+import 'package:ecommerce_app/features/wishlist/logic/states/wishlist_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,8 +19,7 @@ class ProductListScreen extends ConsumerStatefulWidget {
   const ProductListScreen({super.key});
 
   @override
-  ConsumerState<ProductListScreen> createState() =>
-      _ProductListScreenState();
+  ConsumerState<ProductListScreen> createState() => _ProductListScreenState();
 }
 
 class _ProductListScreenState extends ConsumerState<ProductListScreen> {
@@ -32,6 +33,9 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
       final status = ref.read(productStatusProvider);
       if (status == ProductStatus.initial) {
         ref.read(productNotifierProvider.notifier).initialize();
+      }
+      if (ref.read(wishlistStatusProvider) == WishlistStatus.initial) {
+        ref.read(wishlistNotifierProvider.notifier).load();
       }
     });
   }
@@ -64,8 +68,7 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () =>
-            ref.read(productNotifierProvider.notifier).refresh(),
+        onRefresh: () => ref.read(productNotifierProvider.notifier).refresh(),
         child: Column(
           children: [
             // Search bar.
@@ -119,6 +122,7 @@ class _ProductBody extends ConsumerWidget {
     final hasMore = ref.watch(productHasMoreProvider);
     final isLoadingMore = ref.watch(productIsLoadingMoreProvider);
     final error = ref.watch(productErrorProvider);
+    final wishlistedIds = ref.watch(wishlistProductIdsProvider);
 
     if (status == ProductStatus.loading && products.isEmpty) {
       return const SingleChildScrollView(
@@ -130,8 +134,7 @@ class _ProductBody extends ConsumerWidget {
     if (status == ProductStatus.failure && products.isEmpty) {
       return AppErrorWidget(
         message: error ?? 'Something went wrong.',
-        onRetry: () =>
-            ref.read(productNotifierProvider.notifier).refresh(),
+        onRetry: () => ref.read(productNotifierProvider.notifier).refresh(),
       );
     }
 
@@ -145,13 +148,15 @@ class _ProductBody extends ConsumerWidget {
           _FeaturedSliver(
             featured: featured,
             langCode: langCode,
+            wishlistedIds: wishlistedIds,
+            onWishlistTap: (product) => ref
+                .read(wishlistNotifierProvider.notifier)
+                .toggleProduct(product.id),
           ),
-
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           sliver: SliverGrid(
-            gridDelegate:
-                const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: AppSpacing.md,
               crossAxisSpacing: AppSpacing.md,
@@ -162,12 +167,15 @@ class _ProductBody extends ConsumerWidget {
                 product: products[i],
                 onTap: () => ctx.push('/product/${products[i].id}'),
                 languageCode: langCode,
+                isWishlisted: wishlistedIds.contains(products[i].id),
+                onWishlistTap: () => ref
+                    .read(wishlistNotifierProvider.notifier)
+                    .toggleProduct(products[i].id),
               ),
               childCount: products.length,
             ),
           ),
         ),
-
         if (isLoadingMore)
           const SliverToBoxAdapter(
             child: Padding(
@@ -181,16 +189,13 @@ class _ProductBody extends ConsumerWidget {
               ),
             ),
           ),
-
         if (hasMore && !isLoadingMore)
           SliverToBoxAdapter(
             child: _LoadMoreTrigger(
-              onVisible: () => ref
-                  .read(productNotifierProvider.notifier)
-                  .loadNextPage(),
+              onVisible: () =>
+                  ref.read(productNotifierProvider.notifier).loadNextPage(),
             ),
           ),
-
         const SliverPadding(
           padding: EdgeInsets.only(bottom: AppSpacing.xl),
         ),
@@ -205,10 +210,14 @@ class _FeaturedSliver extends StatelessWidget {
   const _FeaturedSliver({
     required this.featured,
     required this.langCode,
+    required this.wishlistedIds,
+    required this.onWishlistTap,
   });
 
   final List<ProductEntity> featured;
   final String langCode;
+  final Set<String> wishlistedIds;
+  final ValueChanged<ProductEntity> onWishlistTap;
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +241,8 @@ class _FeaturedSliver extends StatelessWidget {
             products: featured,
             onProductTap: (p) => context.push('/product/${p.id}'),
             languageCode: langCode,
+            wishlistedIds: wishlistedIds,
+            onWishlistTap: onWishlistTap,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(
@@ -279,9 +290,8 @@ class _SearchBar extends StatelessWidget {
         onChanged: onChanged,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
-          hintText: langCode == 'ar'
-              ? 'ابحث عن منتجات...'
-              : 'Search products...',
+          hintText:
+              langCode == 'ar' ? 'ابحث عن منتجات...' : 'Search products...',
           prefixIcon: const Icon(Icons.search_rounded),
           suffixIcon: AnimatedBuilder(
             animation: controller,
@@ -367,8 +377,7 @@ class _LoadMoreTriggerState extends State<_LoadMoreTrigger> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => widget.onVisible());
+    WidgetsBinding.instance.addPostFrameCallback((_) => widget.onVisible());
   }
 
   @override

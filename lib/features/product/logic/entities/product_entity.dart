@@ -62,21 +62,21 @@ class ProductEntity {
     int? sortOrder,
   }) {
     return ProductEntity(
-      id:            id,
-      categoryId:    categoryId    ?? this.categoryId,
-      nameEn:        nameEn        ?? this.nameEn,
-      nameAr:        nameAr        ?? this.nameAr,
+      id: id,
+      categoryId: categoryId ?? this.categoryId,
+      nameEn: nameEn ?? this.nameEn,
+      nameAr: nameAr ?? this.nameAr,
       descriptionEn: descriptionEn ?? this.descriptionEn,
       descriptionAr: descriptionAr ?? this.descriptionAr,
-      basePrice:     basePrice     ?? this.basePrice,
+      basePrice: basePrice ?? this.basePrice,
       discountPrice: discountPrice == _sentinel
           ? this.discountPrice
           : discountPrice as double?,
-      images:        images        ?? this.images,
-      isActive:      isActive      ?? this.isActive,
-      isFeatured:    isFeatured    ?? this.isFeatured,
-      sortOrder:     sortOrder     ?? this.sortOrder,
-      createdAt:     createdAt,
+      images: images ?? this.images,
+      isActive: isActive ?? this.isActive,
+      isFeatured: isFeatured ?? this.isFeatured,
+      sortOrder: sortOrder ?? this.sortOrder,
+      createdAt: createdAt,
     );
   }
 

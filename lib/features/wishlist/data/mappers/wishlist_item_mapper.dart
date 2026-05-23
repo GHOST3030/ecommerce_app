@@ -7,20 +7,19 @@ class WishlistItemMapper {
 
   static WishlistItemEntity toEntity(WishlistItemModel model) {
     return WishlistItemEntity(
-      id:        model.id,
-      userId:    model.userId,
+      id: model.id,
+      userId: model.userId,
       productId: model.productId,
       createdAt: model.createdAt,
-      product: model.product != null
-          ? ProductMapper.toEntity(model.product!)
-          : null,
+      product:
+          model.product != null ? ProductMapper.toEntity(model.product!) : null,
     );
   }
 
   static WishlistItemModel toModel(WishlistItemEntity entity) {
     return WishlistItemModel(
-      id:        entity.id,
-      userId:    entity.userId,
+      id: entity.id,
+      userId: entity.userId,
       productId: entity.productId,
       createdAt: entity.createdAt,
     );

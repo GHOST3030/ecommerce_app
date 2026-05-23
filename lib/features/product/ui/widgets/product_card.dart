@@ -132,8 +132,7 @@ class ProductCardSkeleton extends StatelessWidget {
                   top: Radius.circular(AppSpacing.radiusLg),
                 ),
                 child: ColoredBox(
-                  color:
-                      isDark ? AppColors.dividerDark : AppColors.shimmerBase,
+                  color: isDark ? AppColors.dividerDark : AppColors.shimmerBase,
                 ),
               ),
             ),
@@ -261,9 +260,13 @@ class _WishlistButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xs),
           child: Icon(
-            isWishlisted ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+            isWishlisted
+                ? Icons.favorite_rounded
+                : Icons.favorite_border_rounded,
             size: AppSpacing.iconSm,
-            color: isWishlisted ? AppColors.secondary : AppColors.textSecondaryLight,
+            color: isWishlisted
+                ? AppColors.secondary
+                : AppColors.textSecondaryLight,
           ),
         ),
       ),

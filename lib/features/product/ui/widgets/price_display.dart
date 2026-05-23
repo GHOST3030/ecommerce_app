@@ -19,8 +19,7 @@ class PriceDisplay extends StatelessWidget {
   final PriceSize size;
   final bool showBadge;
 
-  bool get _hasDiscount =>
-      discountPrice != null && discountPrice! < price;
+  bool get _hasDiscount => discountPrice != null && discountPrice! < price;
 
   double get _effectivePrice => _hasDiscount ? discountPrice! : price;
 
@@ -51,8 +50,7 @@ class PriceDisplay extends StatelessWidget {
           ),
 
           // Discount badge.
-          if (showBadge)
-            _DiscountBadge(percent: _discountPercent, size: size),
+          if (showBadge) _DiscountBadge(percent: _discountPercent, size: size),
         ],
       ],
     );

@@ -33,8 +33,7 @@ class ProductRepositoryImpl implements ProductRepository {
       );
 
   @override
-  Future<ProductEntity> getProductById(String id) =>
-      _execute(
+  Future<ProductEntity> getProductById(String id) => _execute(
         () async {
           final model = await _datasource.getProductById(id);
           return ProductMapper.toEntity(model);
@@ -59,18 +58,15 @@ class ProductRepositoryImpl implements ProductRepository {
       );
 
   @override
-  Future<List<ProductEntity>> getFeaturedProducts({int limit = 10}) =>
-      _execute(
+  Future<List<ProductEntity>> getFeaturedProducts({int limit = 10}) => _execute(
         () async {
-          final models =
-              await _datasource.getFeaturedProducts(limit: limit);
+          final models = await _datasource.getFeaturedProducts(limit: limit);
           return ProductMapper.toEntityList(models);
         },
       );
 
   @override
-  Future<List<CategoryEntity>> getCategories() =>
-      _execute(
+  Future<List<CategoryEntity>> getCategories() => _execute(
         () async {
           final models = await _datasource.getCategories();
           return models.map(CategoryMapper.toEntity).toList();
@@ -83,8 +79,7 @@ class ProductRepositoryImpl implements ProductRepository {
   ) =>
       _execute(
         () async {
-          final models =
-              await _datasource.getVariantsByProductId(productId);
+          final models = await _datasource.getVariantsByProductId(productId);
           return ProductVariantMapper.toEntityList(models);
         },
       );
