@@ -155,9 +155,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       if (authState.status == AuthStatus.unauthenticated) {
-        return location == AppRoutes.login
-            ? AppRoutes.register
-            : AppRoutes.login;
+        return isAuthRoute ? null : AppRoutes.login;
       }
 
       return null;
