@@ -1,5 +1,6 @@
 import 'package:ecommerce_app/core/config/app_config.dart';
 import 'package:ecommerce_app/core/l10n/generated/app_localizations.dart';
+import 'package:ecommerce_app/core/providers/locale_provider.dart';
 import 'package:ecommerce_app/core/router/app_router.dart';
 import 'package:ecommerce_app/core/supabase/supabase_service.dart';
 import 'package:ecommerce_app/core/theme/app_theme.dart';
@@ -20,21 +21,27 @@ class EcommerceApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final locale = ref.watch(localeNotifierProvider);
+    final textDirection = ref.watch(textDirectionProvider);
 
-    return MaterialApp.router(
-      title: 'E-commerce App',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      routerConfig: router,
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+    return Directionality(
+      textDirection: textDirection,
+      child: MaterialApp.router(
+        title: 'E-commerce App',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        locale: locale,
+        routerConfig: router,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+      ),
     );
   }
 }

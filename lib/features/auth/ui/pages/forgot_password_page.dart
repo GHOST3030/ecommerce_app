@@ -1,12 +1,12 @@
+import 'package:ecommerce_app/features/auth/logic/provider/auth_providers.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/app_theme.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/auth_scaffold.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/auth_text_field.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/auth_widgets.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/primary_button.dart';
+import 'package:ecommerce_app/features/auth/ui/widget/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../logic/provider/auth_providers.dart';
-import '../widget/app_theme.dart';
-import '../widget/auth_scaffold.dart';
-import '../widget/auth_text_field.dart';
-import '../widget/auth_widgets.dart';
-import '../widget/primary_button.dart';
-import '../widget/validators.dart';
 
 class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});

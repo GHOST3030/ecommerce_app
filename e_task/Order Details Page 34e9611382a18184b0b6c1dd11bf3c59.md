@@ -1,0 +1,8 @@
+# Order Details Page
+
+#: 51
+Assigned: Ahmed Alalawi
+Depends on: Orders Management Page (Orders%20Management%20Page%2034e9611382a181f28f8bd1de94d44c7a.md)
+Description: Show full order breakdown with items and user info.
+Stage: 9. Admin Panel (Web)
+Status: Done
